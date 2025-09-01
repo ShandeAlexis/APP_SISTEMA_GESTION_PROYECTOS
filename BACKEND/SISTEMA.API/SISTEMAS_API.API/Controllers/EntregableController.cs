@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SISTEMA.API.SISTEMAS_api.Core.Constantes;
 using SISTEMA.API.SISTEMAS_API.BD;
 using SISTEMA.API.SISTEMAS_API.BD.Entities;
 
@@ -22,31 +23,50 @@ public class EntregableController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Entregable>>> GetEntregables()
     {
-        return await _context.Entregables.ToListAsync();
+        try
+        {
+            return await _context.Entregables.ToListAsync();
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, Mensajes.General.ErrorInterno);
+        }
     }
 
     // GET: api/Entregables/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Entregable>> GetEntregable(int id)
     {
-        var entregable = await _context.Entregables.FindAsync(id);
-
-        if (entregable == null)
+        try
         {
-            return NotFound();
-        }
+            var entregable = await _context.Entregables.FindAsync(id);
 
-        return entregable;
+            if (entregable == null)
+                return NotFound(Mensajes.Entregable.NoEncontrado);
+
+            return entregable;
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, Mensajes.General.ErrorInterno);
+        }
     }
 
     // POST: api/Entregables
     [HttpPost]
     public async Task<ActionResult<Entregable>> PostEntregable(Entregable entregable)
     {
-        _context.Entregables.Add(entregable);
-        await _context.SaveChangesAsync();
+        try
+        {
+            _context.Entregables.Add(entregable);
+            await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetEntregable), new { id = entregable.ENTRinID }, entregable);
+            return CreatedAtAction(nameof(GetEntregable), new { id = entregable.ENTRinID }, entregable);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, Mensajes.General.ErrorInterno);
+        }
     }
 
     // PUT: api/Entregables/5
@@ -54,11 +74,13 @@ public class EntregableController : ControllerBase
     public async Task<IActionResult> PutEntregable(int id, Entregable entregable)
     {
         if (id != entregable.ENTRinID)
-        {
-            return BadRequest();
-        }
+            return BadRequest(Mensajes.Entregable.IdInvalido);
 
-        _context.Entry(entregable).State = EntityState.Modified;
+        var entregableExistente = await _context.Entregables.FindAsync(id);
+        if (entregableExistente == null)
+            return NotFound(Mensajes.Entregable.NoEncontrado);
+
+        _context.Entry(entregableExistente).CurrentValues.SetValues(entregable);
 
         try
         {
@@ -66,14 +88,14 @@ public class EntregableController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!_context.Entregables.Any(e => e.ENTRinID == id))
-            {
-                return NotFound();
-            }
+            if (!await _context.Entregables.AnyAsync(e => e.ENTRinID == id))
+                return NotFound(Mensajes.Entregable.NoEncontrado);
             else
-            {
                 throw;
-            }
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, Mensajes.Entregable.ErrorActualizar);
         }
 
         return NoContent();
@@ -83,15 +105,20 @@ public class EntregableController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEntregable(int id)
     {
-        var entregable = await _context.Entregables.FindAsync(id);
-        if (entregable == null)
+        try
         {
-            return NotFound();
+            var entregable = await _context.Entregables.FindAsync(id);
+            if (entregable == null)
+                return NotFound(Mensajes.Entregable.NoEncontrado);
+
+            _context.Entregables.Remove(entregable);
+            await _context.SaveChangesAsync();
+
+            return Ok(Mensajes.Entregable.Eliminado);
         }
-
-        _context.Entregables.Remove(entregable);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, Mensajes.General.ErrorInterno);
+        }
     }
 }
