@@ -15,10 +15,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="SISTEMAS_api.Core\Interfaces\" />
-    <Folder Include="SISTEMAS_api.Core\Models\" />
-    <Folder Include="SISTEMAS_api.Core\Services\" />
-  </ItemGroup>
-
 </Project>

@@ -31,7 +31,6 @@ namespace SISTEMA.API.SISTEMAS_API.BD.Entities
         [Required]
         public int ENTRinDuracionRealDias { get; set; }
 
-        // === Relaciones ===
         [Required]
         public int CONTinID { get; set; }
         
