@@ -54,11 +54,4 @@ public class EntregableRepository : IEntregableRepository
         return true;
     }
 
-    // public async Task<bool> ExistsByName(string nombre, int? excludingId = null)
-    // {
-    //     return await _context.Entregables
-    //         .AnyAsync(e => e.ENTRchCodigo == nombre &&
-    //                       (!excludingId.HasValue || e.ENTRinID != excludingId.Value));
-    // }
-
 }

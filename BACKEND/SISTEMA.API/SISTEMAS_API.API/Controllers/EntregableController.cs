@@ -1,12 +1,9 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SISTEMA.API.SISTEMAS_api.Core.Constantes;
 using SISTEMA.API.SISTEMAS_api.Core.Interfaces;
 using SISTEMA.API.SISTEMAS_api.Core.Models;
 using SISTEMA.API.SISTEMAS_api.Core.Models.Entregable;
-using SISTEMA.API.SISTEMAS_API.BD;
-using SISTEMA.API.SISTEMAS_API.BD.Entities;
 
 namespace SISTEMA.API.SISTEMAS_API.API.Controllers;
 
@@ -71,14 +68,13 @@ public class EntregableController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutEntregable(int id, [FromBody] EntregableDTO entregableDTO)
+    public async Task<IActionResult> PutEntregable(int id, [FromBody] EntregableCreateDTO createDTO)
     {
         try
         {
-            var actualizado = await entregableService.UpdateEntregable(id, entregableDTO);
+            var actualizado = await entregableService.UpdateEntregable(id, createDTO);
             if (actualizado == null)
                 return NotFound(Mensajes.Entregable.NoEncontrado);
-
             return Ok(actualizado);
         }
         catch (InvalidOperationException ex)

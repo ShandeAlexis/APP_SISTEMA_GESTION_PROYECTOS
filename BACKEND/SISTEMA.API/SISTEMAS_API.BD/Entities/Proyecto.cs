@@ -13,8 +13,6 @@ public class Proyecto
 
     [Required, StringLength(50)]
     public string PROYchCodigo { get; set; } = string.Empty;
-
-
     public string? PROYchDescripcion { get; set; }
 
     [Required]

@@ -100,21 +100,23 @@ public class EntregableService : IEntregableService
         };
     }
 
-    public async Task<EntregableDTO?> UpdateEntregable(int id, EntregableDTO entregableDTO)
+    public async Task<EntregableDTO?> UpdateEntregable(int id, EntregableCreateDTO createDTO)
     {
         var entregable = await entregableRepository.GetEntregableById(id);
-        if (entregable == null) return null;
+        if (entregable == null)
+        {
+            throw new Exception(Mensajes.Entregable.ErrorObtener);
+        }
+        entregable.ENTRchCodigo = createDTO.Codigo;
+        entregable.ENTRdePctContrato = createDTO.PctContrato;
+        entregable.ENTRdaFechaInicialPLAN = createDTO.FechaInicialPlan;
+        entregable.ENTRinDuracionPlanDias = createDTO.DuracionPlanDias;
+        entregable.ENTRdaFechaInicialREAL = createDTO.FechaInicialReal;
+        entregable.ENTRinDuracionRealDias = createDTO.DuracionRealDias;
+        entregable.TENTchCodigo = createDTO.TipoEntregableCodigo;
+        entregable.TPROchCodigo = createDTO.TipoProrrateoCodigo;
+        entregable.EDTchCodigo = createDTO.EDTchCodigo;
 
-        entregable.ENTRchCodigo = entregableDTO.Codigo;
-        entregable.ENTRdePctContrato = entregableDTO.PctContrato;
-        entregable.ENTRdaFechaInicialPLAN = entregableDTO.FechaInicialPlan;
-        entregable.ENTRinDuracionPlanDias = entregableDTO.DuracionPlanDias;
-        entregable.ENTRdaFechaInicialREAL = entregableDTO.FechaInicialReal;
-        entregable.ENTRinDuracionRealDias = entregableDTO.DuracionRealDias;
-        entregable.CONTinID = entregableDTO.Id;
-        entregable.TENTchCodigo = entregableDTO.TipoEntregableCodigo;
-        entregable.TPROchCodigo = entregableDTO.TipoProrrateoCodigo;
-        entregable.EDTchCodigo = entregableDTO.EDTchCodigo;
         await entregableRepository.UpdateEntregable(entregable);
 
         return new EntregableDTO

@@ -11,6 +11,6 @@ public interface IEntregableService
     Task<IEnumerable<EntregableDTO>> GetEntregables();
     Task<EntregableDTO?> GetEntregable(int id);
     Task<EntregableDTO> CreateEntregable(EntregableCreateDTO entregableCreateDTO);
-    Task<EntregableDTO?> UpdateEntregable(int id, EntregableDTO entregableDTO);
+    Task<EntregableDTO?> UpdateEntregable(int id, EntregableCreateDTO createDTO);
     Task<bool> DeleteEntregable(int id);
 }

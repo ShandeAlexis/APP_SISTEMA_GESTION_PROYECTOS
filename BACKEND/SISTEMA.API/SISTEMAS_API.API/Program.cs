@@ -12,9 +12,13 @@ builder.Services.AddDbContext<SISTEMAS_API_DBContext>(options =>
 
 // Registrar repositorios
 builder.Services.AddScoped<IEntregableRepository, EntregableRepository>();
+builder.Services.AddScoped<IContratoRepository, ContratoRepository>();
+builder.Services.AddScoped<IProyectoRepository, ProyectoRepository>();
 
 // Registrar servicios de la capa Core
 builder.Services.AddScoped<IEntregableService, EntregableService>();
+builder.Services.AddScoped<IContratoService, ContratoService>();
+builder.Services.AddScoped<IProyectoService, ProyectoService>();
 
 // OpenAPI / Swagger
 builder.Services.AddOpenApi();
