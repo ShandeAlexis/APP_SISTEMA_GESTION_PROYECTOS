@@ -4,6 +4,17 @@ namespace SISTEMA.API.SISTEMAS_api.Core.Constantes;
 
 public static class Mensajes
 {
+    public static class Usuario
+    {
+        public const string ErrorObtener = "Error al obtener los usuarios.";
+        public const string ErrorCrear = "Error al crear el usuario.";
+        public const string ErrorActualizar = "Error al actualizar el usuario.";
+        public const string ErrorEliminar = "Error al eliminar el usuario.";
+        public const string ErrorLogin = "Error en el proceso de login.";
+        public const string NoEncontrado = "Usuario no encontrado.";
+        public const string CredencialesInvalidas = "Email o contraseña incorrectos.";
+    }
+
     public static class Proyecto
     {
         public const string NoEncontrado = "No se encontró el proyecto con ese ID.";

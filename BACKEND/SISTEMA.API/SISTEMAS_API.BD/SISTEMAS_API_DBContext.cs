@@ -10,4 +10,5 @@ public class SISTEMAS_API_DBContext : DbContext
     public DbSet<Entregable> Entregables { get; set; } = null!;
     public DbSet<Contrato> Contratos { get; set; } = null!;
     public DbSet<Proyecto> Proyectos { get; set; } = null!;
+    public DbSet<Usuario> Usuarios { get; set; } = null!;
 }

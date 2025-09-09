@@ -1,21 +1,21 @@
-function App() {
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import ProyectosList from "./pages/Proyectos/ProyectosList";
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reloadxd.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Navbar />
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<Navigate to="/proyectos" />} />
+
+          <Route path="/proyectos" element={<ProyectosList />} />
+
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
