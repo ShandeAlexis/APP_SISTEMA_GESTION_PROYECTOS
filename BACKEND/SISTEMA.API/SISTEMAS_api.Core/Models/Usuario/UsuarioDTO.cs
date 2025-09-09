@@ -8,3 +8,9 @@ public class UsuarioDTO
     public string Nombre { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
 }
+
+public class AuthResponseDTO
+{
+    public UsuarioDTO Usuario { get; set; } = new UsuarioDTO();
+    public string Token { get; set; } = string.Empty;
+}

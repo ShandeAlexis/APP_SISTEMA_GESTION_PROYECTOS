@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SISTEMA.API.SISTEMAS_api.Core.Constantes;
 using SISTEMA.API.SISTEMAS_api.Core.Interfaces;
@@ -16,7 +17,9 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
             this.usuarioService = usuarioService;
         }
 
+        // ✅ Requiere token
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<UsuarioDTO>>> GetUsuarios()
         {
             try
@@ -31,6 +34,7 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<UsuarioDTO>> GetUsuario(int id)
         {
             try
@@ -48,6 +52,7 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
         }
 
         [HttpPost]
+        [Authorize] // ✅ solo usuarios autenticados pueden crear otros usuarios
         public async Task<ActionResult<UsuarioDTO>> PostUsuario([FromBody] UsuarioCreateDTO createDTO)
         {
             try
@@ -66,6 +71,7 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutUsuario(int id, [FromBody] UsuarioCreateDTO updateDTO)
         {
             try
@@ -87,6 +93,7 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
             try
@@ -106,21 +113,30 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
             }
         }
 
+        // ✅ Login no requiere token
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UsuarioCreateDTO loginDTO)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDTO)
         {
             try
             {
-                var usuario = await usuarioService.Login(loginDTO.Email, loginDTO.Password);
-                if (usuario == null)
+                var authResponse = await usuarioService.Login(loginDTO.Email, loginDTO.Password);
+                if (authResponse == null)
                     return Unauthorized(Mensajes.Usuario.CredencialesInvalidas);
 
-                return Ok(usuario);
+                return Ok(authResponse);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { mensaje = Mensajes.Usuario.ErrorLogin, detalle = ex.Message });
             }
         }
+    }
+
+    // DTO solo para login
+    public class LoginRequestDTO
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }

@@ -1,6 +1,9 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
 using SISTEMA.API.SISTEMAS_api.Core.Constantes;
 using SISTEMA.API.SISTEMAS_api.Core.Interfaces;
 using SISTEMA.API.SISTEMAS_api.Core.Models.Usuario;
@@ -9,13 +12,15 @@ using SISTEMA.API.SISTEMAS_API.BD.Repositories;
 
 namespace SISTEMA.API.SISTEMAS_api.Core.Services;
 
-public class UsuarioService: IUsuarioService
+public class UsuarioService : IUsuarioService
 {
- private readonly IUsuarioRepository usuarioRepository;
+    private readonly IUsuarioRepository usuarioRepository;
+    private readonly IConfiguration configuration; // 👈 para leer las claves del appsettings
 
-    public UsuarioService(IUsuarioRepository usuarioRepo)
+    public UsuarioService(IUsuarioRepository usuarioRepo, IConfiguration config)
     {
         usuarioRepository = usuarioRepo;
+        configuration = config;
     }
 
     public async Task<IEnumerable<UsuarioDTO>> GetUsuarios()
@@ -92,7 +97,7 @@ public class UsuarioService: IUsuarioService
         return await usuarioRepository.DeleteUsuario(id);
     }
 
-    public async Task<UsuarioDTO?> Login(string email, string password)
+    public async Task<AuthResponseDTO?> Login(string email, string password)
     {
         var usuario = await usuarioRepository.GetUsuarioByEmail(email);
         if (usuario == null) return null;
@@ -100,13 +105,25 @@ public class UsuarioService: IUsuarioService
         var hash = HashPassword(password);
         if (usuario.USUAchPassword != hash) return null;
 
-        return new UsuarioDTO
+        // Generar token
+        var key = configuration["Jwt:Key"] ?? "clave_super_secreta_123";
+        var issuer = configuration["Jwt:Issuer"] ?? "SISTEMA.API";
+        var token = GenerateJwtToken(usuario, key, issuer);
+
+        var usuarioDTO = new UsuarioDTO
         {
             Id = usuario.USUAinID,
             Nombre = usuario.USUAchNombre,
             Email = usuario.USUAchEmail
         };
+
+        return new AuthResponseDTO
+        {
+            Usuario = usuarioDTO,
+            Token = token
+        };
     }
+
 
     private string HashPassword(string password)
     {
@@ -114,5 +131,28 @@ public class UsuarioService: IUsuarioService
         var bytes = Encoding.UTF8.GetBytes(password);
         var hash = sha.ComputeHash(bytes);
         return Convert.ToBase64String(hash);
+    }
+
+    private string GenerateJwtToken(Usuario usuario, string key, string issuer)
+    {
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, usuario.USUAchEmail),
+            new Claim("nombre", usuario.USUAchNombre),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: issuer,
+            audience: issuer,
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(2),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
