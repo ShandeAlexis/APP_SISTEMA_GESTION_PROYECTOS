@@ -1,0 +1,58 @@
+/* Contenedor principal */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+  color: #fff;
+}
+
+/* Header */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #222;
+  padding: 15px 20px;
+  border-bottom: 2px solid #4CAF50;
+  flex-shrink: 0;
+}
+
+.main-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.logout-btn {
+  background: linear-gradient(90deg, #e74c3c, #c0392b);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.logout-btn:hover {
+  background: linear-gradient(90deg, #c0392b, #a93226);
+}
+
+/* Contenido principal */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+.nav-btn {
+  background: #4CAF50;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.nav-btn:hover {
+  background: #45a049;
+}

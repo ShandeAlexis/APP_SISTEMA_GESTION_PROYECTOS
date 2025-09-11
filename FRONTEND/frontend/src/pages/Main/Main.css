@@ -1,0 +1,106 @@
+* {
+  box-sizing: border-box;
+}
+
+.main-page {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.main-page, .main-content {
+  width: 100%;
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Header */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #222;
+  padding: 15px 20px;
+  border-bottom: 2px solid #4CAF50;
+}
+
+.main-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.logout-btn {
+  background: linear-gradient(90deg, #e74c3c, #c0392b);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.logout-btn:hover {
+  background: linear-gradient(90deg, #c0392b, #a93226);
+}
+
+/* Contenido principal */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  text-align: center;
+}
+
+#welcomeMsg {
+  margin-bottom: 30px;
+  font-size: 1.3rem;
+}
+
+/* Tarjetas */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+
+.card {
+  background: #2a2a2a;
+  padding: 25px 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  font-size: 1rem;
+  transition: transform 0.2s, background 0.2s;
+  cursor: pointer;
+  text-align: center;
+  word-wrap: break-word; /* para textos largos */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background: #333;
+}
+
+
+@media (max-width: 480px) {
+  #welcomeMsg {
+    font-size: 1.1rem;
+  }
+
+  .card {
+    padding: 20px 10px;
+    font-size: 0.9rem;
+  }
+
+  .nav-btn, .logout-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}

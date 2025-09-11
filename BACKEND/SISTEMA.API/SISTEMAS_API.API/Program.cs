@@ -2,11 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
 using SISTEMA.API.SISTEMAS_api.Core.Interfaces;
 using SISTEMA.API.SISTEMAS_api.Core.Services;
 using SISTEMA.API.SISTEMAS_API.BD;
 using SISTEMA.API.SISTEMAS_API.BD.Repositories;
+using SISTEMA.API.SISTEMAS_api.Core.Config; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        policy => policy.WithOrigins("http://localhost:3000") // puerto donde corre React
+        policy => policy.WithOrigins("http://localhost:3000")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
 });
@@ -26,6 +26,12 @@ builder.Services.AddCors(options =>
 // ========================
 builder.Services.AddDbContext<SISTEMAS_API_DBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// ========================
+// Configuración JwtSettings
+// ========================
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("Jwt")); 
 
 // ========================
 // Registrar repositorios
@@ -46,9 +52,11 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 // ========================
 // Configuración JWT
 // ========================
-var key = builder.Configuration["Jwt:Key"] ?? "clave_super_secreta_123";
-var issuer = builder.Configuration["Jwt:Issuer"] ?? "SISTEMA.API";
-
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>(); 
+if (jwtSettings is null)
+{
+    throw new InvalidOperationException("La sección 'Jwt' no está configurada en appsettings.json");
+}
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -58,9 +66,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = issuer,
-            ValidAudience = issuer,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Issuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
         };
     });
 
@@ -81,11 +89,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowFrontend");
 
-// JWT debe ir antes de MapControllers
+// Middleware de autenticación/autorización
 app.UseAuthentication();
 app.UseAuthorization();
-
-// app.UseHttpsRedirection();
 
 app.MapControllers();
 
