@@ -10,5 +10,18 @@ public interface IEntregableRepository
     Task AddEntregable(Entregable entregable);
     Task UpdateEntregable(Entregable entregable);
     Task<bool> DeleteEntregable(int id);
-    //  Task<bool> ExistsByName(string nombre, int? excludingId = null);
+
+
+    Task AddCurva(Curva curva);
+    Task AddDetallesCurva(IEnumerable<DetalleCurva> detalles);
+
+
+    // Lectura/edición de curvas
+    Task<Curva?> GetCurvaById(int curvaId);
+    Task<IEnumerable<DetalleCurva>> GetDetallesByCurva(int curvaId);
+    Task UpdateDetallesCurva(IEnumerable<DetalleCurva> detalles);
+
+    // Opcional (recomendado): atómico
+    Task AddCurvaConDetallesAsync(Curva curva, IEnumerable<DetalleCurva> detalles);
+
 }

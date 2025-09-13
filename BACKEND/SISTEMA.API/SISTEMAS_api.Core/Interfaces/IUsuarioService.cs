@@ -12,4 +12,6 @@ public interface IUsuarioService
     Task<bool> DeleteUsuario(int id);
 
     Task<AuthResponseDTO?> Login(string email, string password);
+
+    
 }

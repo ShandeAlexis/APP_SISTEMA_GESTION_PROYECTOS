@@ -13,4 +13,8 @@ public interface IEntregableService
     Task<EntregableDTO> CreateEntregable(EntregableCreateDTO entregableCreateDTO);
     Task<EntregableDTO?> UpdateEntregable(int id, EntregableCreateDTO createDTO);
     Task<bool> DeleteEntregable(int id);
+
+
+    Task<IEnumerable<CurvaMensualDTO>> CalcularCurvaMensualAsync(int entregableId, string tipoCurvaCodigo);
+
 }

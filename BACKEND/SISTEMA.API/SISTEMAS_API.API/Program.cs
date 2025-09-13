@@ -6,7 +6,8 @@ using SISTEMA.API.SISTEMAS_api.Core.Interfaces;
 using SISTEMA.API.SISTEMAS_api.Core.Services;
 using SISTEMA.API.SISTEMAS_API.BD;
 using SISTEMA.API.SISTEMAS_API.BD.Repositories;
-using SISTEMA.API.SISTEMAS_api.Core.Config; 
+using SISTEMA.API.SISTEMAS_api.Core.Config;
+using SISTEMA.API.SISTEMAS_API.BD.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +41,7 @@ builder.Services.AddScoped<IEntregableRepository, EntregableRepository>();
 builder.Services.AddScoped<IContratoRepository, ContratoRepository>();
 builder.Services.AddScoped<IProyectoRepository, ProyectoRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-
+builder.Services.AddScoped<ICurvaRepository, CurvaRepository>();
 // ========================
 // Registrar servicios Core
 // ========================
@@ -48,6 +49,7 @@ builder.Services.AddScoped<IEntregableService, EntregableService>();
 builder.Services.AddScoped<IContratoService, ContratoService>();
 builder.Services.AddScoped<IProyectoService, ProyectoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<ICurvaService, CurvaService>();
 
 // ========================
 // Configuración JWT

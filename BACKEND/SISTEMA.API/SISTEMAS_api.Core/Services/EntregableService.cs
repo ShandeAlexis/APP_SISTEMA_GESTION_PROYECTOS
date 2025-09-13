@@ -142,4 +142,102 @@ public class EntregableService : IEntregableService
         return await entregableRepository.DeleteEntregable(id);
     }
 
+
+
+    public async Task<IEnumerable<CurvaMensualDTO>> CalcularCurvaMensualAsync(int entregableId, string tipoCurvaCodigo)
+    {
+        // ✅ Validar tipos de curva permitidos
+        if (tipoCurvaCodigo != "CRV_PLAN_VIG" && tipoCurvaCodigo != "CRV_REAL_VIG")
+            throw new Exception("Solo se permiten los tipos de curva: CRV_PLAN_VIG o CRV_REAL_VIG.");
+
+        var entregable = await entregableRepository.GetEntregableById(entregableId);
+        if (entregable == null)
+            throw new Exception(Mensajes.Entregable.NoEncontrado);
+
+        // Definir fechas de la curva según tipo
+        var fechaInicio = tipoCurvaCodigo == "CRV_PLAN_VIG"
+            ? entregable.ENTRdaFechaInicialPLAN
+            : entregable.ENTRdaFechaInicialREAL;
+
+        var fechaFin = tipoCurvaCodigo == "CRV_PLAN_VIG"
+            ? entregable.ENTRdaFechaInicialPLAN.AddDays(entregable.ENTRinDuracionPlanDias - 1)
+            : entregable.ENTRdaFechaInicialREAL.AddDays(entregable.ENTRinDuracionRealDias - 1);
+
+        // Crear curva
+        var curva = new Curva
+        {
+            CURVchOrigen = "ENTREGABLE",
+            CURVinIDOrigen = entregableId,
+            CURVdaFechaInicial = fechaInicio,
+            CURVdaFechaFin = fechaFin,
+            TCURVchCodigo = tipoCurvaCodigo
+        };
+
+        // Guardar la curva (para obtener CURVinID)
+        await entregableRepository.AddCurva(curva);
+
+        // Armar los meses que cubre la curva
+        var meses = new List<(int anio, int mes)>();
+        var fechaTmp = new DateTime(fechaInicio.Year, fechaInicio.Month, 1);
+
+        while (fechaTmp <= fechaFin)
+        {
+            meses.Add((fechaTmp.Year, fechaTmp.Month));
+            fechaTmp = fechaTmp.AddMonths(1);
+        }
+
+        var detalles = new List<DetalleCurva>();
+        decimal valorMensual = 0;
+        decimal acumulado = 0;
+        int pos = 1;
+
+        if (tipoCurvaCodigo == "CRV_PLAN_VIG")
+        {
+            // 🔹 Reparto en 100%
+            valorMensual = 100m / meses.Count;
+
+            foreach (var (anio, mes) in meses)
+            {
+                acumulado += valorMensual;
+
+                detalles.Add(new DetalleCurva
+                {
+                    CURVinID = curva.CURVinID,
+                    DCURdaFecha = new DateTime(anio, mes, 1),
+                    DCURreValor = valorMensual,
+                    DCURreValorAcum = acumulado,
+                    DCURinPos = pos++
+                });
+            }
+        }
+        else if (tipoCurvaCodigo == "CRV_REAL_VIG")
+        {
+            // 🔹 Solo se crean meses con valores en 0
+            foreach (var (anio, mes) in meses)
+            {
+                detalles.Add(new DetalleCurva
+                {
+                    CURVinID = curva.CURVinID,
+                    DCURdaFecha = new DateTime(anio, mes, 1),
+                    DCURreValor = 0,
+                    DCURreValorAcum = 0,
+                    DCURinPos = pos++
+                });
+            }
+        }
+
+        // Guardar detalles
+        await entregableRepository.AddDetallesCurva(detalles);
+
+        // Devolver DTOs
+        return detalles.Select(d => new CurvaMensualDTO
+        {
+            Fecha = d.DCURdaFecha,
+            Valor = d.DCURreValor,
+            ValorAcumulado = d.DCURreValorAcum
+        });
+    }
+
+
+
 }

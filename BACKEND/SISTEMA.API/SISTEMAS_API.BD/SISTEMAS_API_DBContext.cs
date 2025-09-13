@@ -11,4 +11,7 @@ public class SISTEMAS_API_DBContext : DbContext
     public DbSet<Contrato> Contratos { get; set; } = null!;
     public DbSet<Proyecto> Proyectos { get; set; } = null!;
     public DbSet<Usuario> Usuarios { get; set; } = null!;
+
+    public DbSet<Curva> Curvas { get; set; } = null!;
+    public DbSet<DetalleCurva> DetalleCurvas { get; set; } = null!;
 }
