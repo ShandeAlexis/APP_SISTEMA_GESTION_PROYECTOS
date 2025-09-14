@@ -7,6 +7,7 @@ public interface IEntregableRepository
 {
     Task<IEnumerable<Entregable>> GetAllEntregables();
     Task<Entregable?> GetEntregableById(int id);
+    Task<IEnumerable<Entregable>> GetEntregablesByContratoId(int contratoId);
     Task AddEntregable(Entregable entregable);
     Task UpdateEntregable(Entregable entregable);
     Task<bool> DeleteEntregable(int id);

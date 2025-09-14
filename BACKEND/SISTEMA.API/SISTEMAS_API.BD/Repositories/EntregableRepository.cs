@@ -29,6 +29,18 @@ public class EntregableRepository : IEntregableRepository
             .FirstOrDefaultAsync(e => e.ENTRinID == id);
     }
 
+    public async Task<IEnumerable<Entregable>> GetEntregablesByContratoId(int contratoId)
+    {
+        return await _context.Entregables
+            .Include(e => e.Contrato)
+            .Include(e => e.TipoEntregable)
+            .Include(e => e.TipoProrrateo)
+            .Include(e => e.EDT)
+            .Where(e => e.CONTinID == contratoId)
+            .ToListAsync();
+    }
+
+
     public async Task AddEntregable(Entregable entregable)
     {
         _context.Entregables.Add(entregable);
@@ -66,70 +78,70 @@ public class EntregableRepository : IEntregableRepository
         await _context.SaveChangesAsync();
     }
 
-       public async Task<Curva?> GetCurvaById(int curvaId)
+    public async Task<Curva?> GetCurvaById(int curvaId)
+    {
+        return await _context.Curvas
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.CURVinID == curvaId);
+    }
+
+    public async Task<IEnumerable<DetalleCurva>> GetDetallesByCurva(int curvaId)
+    {
+        return await _context.DetalleCurvas
+            .Where(d => d.CURVinID == curvaId)
+            .OrderBy(d => d.DCURinPos)
+            .ToListAsync();
+    }
+
+    public async Task UpdateDetallesCurva(IEnumerable<DetalleCurva> detalles)
+    {
+        // Si los detalles vienen "detached", marcamos como Modified
+        foreach (var d in detalles)
         {
-            return await _context.Curvas
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.CURVinID == curvaId);
+            // opcional: attach si no está siendo trackeado
+            var tracked = _context.ChangeTracker.Entries<DetalleCurva>()
+                           .FirstOrDefault(e => e.Entity.DCURinID == d.DCURinID);
+            if (tracked == null)
+            {
+                _context.DetalleCurvas.Attach(d);
+                _context.Entry(d).State = EntityState.Modified;
+            }
+            else
+            {
+                // ya está trackeado, simplemente actualizar propiedades si lo necesitas
+                tracked.CurrentValues.SetValues(d);
+            }
         }
 
-        public async Task<IEnumerable<DetalleCurva>> GetDetallesByCurva(int curvaId)
-        {
-            return await _context.DetalleCurvas
-                .Where(d => d.CURVinID == curvaId)
-                .OrderBy(d => d.DCURinPos)
-                .ToListAsync();
-        }
+        await _context.SaveChangesAsync();
+    }
 
-        public async Task UpdateDetallesCurva(IEnumerable<DetalleCurva> detalles)
+    // ------------------------
+    // Opción recomendada: guardar curva + detalles en UNA transacción
+    // ------------------------
+    public async Task AddCurvaConDetallesAsync(Curva curva, IEnumerable<DetalleCurva> detalles)
+    {
+        using var tx = await _context.Database.BeginTransactionAsync();
+        try
         {
-            // Si los detalles vienen "detached", marcamos como Modified
+            _context.Curvas.Add(curva);
+            await _context.SaveChangesAsync(); // para obtener CURVinID si es autogenerado
+
+            // asignar CURVinID a detalles (por si no lo hicieron)
             foreach (var d in detalles)
             {
-                // opcional: attach si no está siendo trackeado
-                var tracked = _context.ChangeTracker.Entries<DetalleCurva>()
-                               .FirstOrDefault(e => e.Entity.DCURinID == d.DCURinID);
-                if (tracked == null)
-                {
-                    _context.DetalleCurvas.Attach(d);
-                    _context.Entry(d).State = EntityState.Modified;
-                }
-                else
-                {
-                    // ya está trackeado, simplemente actualizar propiedades si lo necesitas
-                    tracked.CurrentValues.SetValues(d);
-                }
+                d.CURVinID = curva.CURVinID;
             }
 
+            _context.DetalleCurvas.AddRange(detalles);
             await _context.SaveChangesAsync();
-        }
 
-        // ------------------------
-        // Opción recomendada: guardar curva + detalles en UNA transacción
-        // ------------------------
-        public async Task AddCurvaConDetallesAsync(Curva curva, IEnumerable<DetalleCurva> detalles)
+            await tx.CommitAsync();
+        }
+        catch
         {
-            using var tx = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                _context.Curvas.Add(curva);
-                await _context.SaveChangesAsync(); // para obtener CURVinID si es autogenerado
-
-                // asignar CURVinID a detalles (por si no lo hicieron)
-                foreach (var d in detalles)
-                {
-                    d.CURVinID = curva.CURVinID;
-                }
-
-                _context.DetalleCurvas.AddRange(detalles);
-                await _context.SaveChangesAsync();
-
-                await tx.CommitAsync();
-            }
-            catch
-            {
-                await tx.RollbackAsync();
-                throw;
-            }
+            await tx.RollbackAsync();
+            throw;
         }
+    }
 }

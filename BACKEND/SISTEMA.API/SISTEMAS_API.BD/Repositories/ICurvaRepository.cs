@@ -9,4 +9,7 @@ public interface ICurvaRepository
     Task UpdateCurva(Curva curva);
     Task DeleteCurva(Curva curva);
 
+    Task<IEnumerable<Curva>> GetCurvasByEntregableId(int entregableId);
+
+
 }

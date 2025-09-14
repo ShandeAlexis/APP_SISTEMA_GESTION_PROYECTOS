@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SISTEMA.API.SISTEMAS_api.Core.Interfaces;
+using SISTEMA.API.SISTEMAS_api.Core.Models.Curva;
 using SISTEMA.API.SISTEMAS_api.Core.Models.Entregable;
 
 namespace SISTEMA.API.SISTEMAS_API.API.Controllers
@@ -67,6 +68,25 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { mensaje = "Error al eliminar la curva.", detalle = ex.Message });
+            }
+        }
+
+
+        [HttpGet("entregable/{entregableId}")]
+        public async Task<ActionResult<IEnumerable<CurvaDTO>>> GetCurvasByEntregable(int entregableId)
+        {
+            try
+            {
+                var curvas = await curvaService.GetCurvasByEntregableId(entregableId);
+
+                if (!curvas.Any())
+                    return NotFound(new { mensaje = "No se encontraron curvas para este entregable." });
+
+                return Ok(curvas);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al obtener curvas", detalle = ex.Message });
             }
         }
 

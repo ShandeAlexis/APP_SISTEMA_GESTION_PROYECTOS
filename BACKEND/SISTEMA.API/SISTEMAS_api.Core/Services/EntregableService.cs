@@ -59,6 +59,26 @@ public class EntregableService : IEntregableService
             EDTchCodigo = e.EDTchCodigo,
         };
     }
+    public async Task<IEnumerable<EntregableDTO>> GetEntregablesByContratoId(int contratoId)
+    {
+        var entregables = await entregableRepository.GetEntregablesByContratoId(contratoId);
+
+        return entregables.Select(e => new EntregableDTO
+        {
+            Id = e.ENTRinID,
+            Codigo = e.ENTRchCodigo,
+            PctContrato = e.ENTRdePctContrato,
+            FechaInicialPlan = e.ENTRdaFechaInicialPLAN,
+            DuracionPlanDias = e.ENTRinDuracionPlanDias,
+            FechaInicialReal = e.ENTRdaFechaInicialREAL,
+            DuracionRealDias = e.ENTRinDuracionRealDias,
+            ContratoCodigo = e.Contrato.CONTchCodigo,
+            TipoEntregableCodigo = e.TENTchCodigo,
+            TipoProrrateoCodigo = e.TPROchCodigo,
+            EDTchCodigo = e.EDTchCodigo
+        });
+    }
+
 
     public async Task<EntregableDTO> CreateEntregable(EntregableCreateDTO entregableCreateDTO)
     {

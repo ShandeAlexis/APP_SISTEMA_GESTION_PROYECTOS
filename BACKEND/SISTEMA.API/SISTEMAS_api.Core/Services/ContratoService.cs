@@ -60,6 +60,29 @@ public class ContratoService : IContratoService
         };
     }
 
+    public async Task<IEnumerable<ContratoDTO>> GetContratosByProyectoId(int proyectoId)
+    {
+        var contratos = await contratoRepository.GetContratosByProyectoId(proyectoId);
+
+        return contratos.Select(c => new ContratoDTO
+        {
+            Id = c.CONTinID,
+            Codigo = c.CONTchCodigo,
+            ProyectoCodigo = c.Proyecto.PROYchCodigo,
+            Capex = c.CONTdeCapex,
+            Costo = c.CONTdeCosto,
+            Estimado = c.CONTdeEstimado,
+            Contratista = c.CONTchContratista,
+            Alcance = c.CONTchAlcance,
+            EstadoCodigo = c.ECONchCodigo,
+            Objetivo = c.CONTchObjetivo,
+            FechaInicial = c.CONTdaFechaInicial,
+            FechaFinal = c.CONTdaFechaFinal,
+            CodigoContrato = c.CONTchCodigoContrato
+        });
+    }
+
+
     public async Task<ContratoDTO> CreateContrato(ContratoCreateDTO contratoCreateDTO)
     {
         var nuevoContrato = new Contrato
@@ -142,7 +165,7 @@ public class ContratoService : IContratoService
             CodigoContrato = existingContrato.CONTchCodigoContrato
         };
     }
-    
+
     public async Task<bool> DeleteContrato(int id)
     {
         return await contratoRepository.DeleteContrato(id);

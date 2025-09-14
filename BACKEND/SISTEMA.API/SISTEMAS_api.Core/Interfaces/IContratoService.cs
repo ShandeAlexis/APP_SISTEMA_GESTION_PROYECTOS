@@ -8,6 +8,8 @@ public interface IContratoService
     Task<IEnumerable<ContratoDTO>> GetContratos();
 
     Task<ContratoDTO?> GetContrato(int id);
+    Task<IEnumerable<ContratoDTO>> GetContratosByProyectoId(int proyectoId); 
+
     Task<ContratoDTO> CreateContrato(ContratoCreateDTO contratoCreateDTO);
     Task<ContratoDTO?> UpdateContrato(int id, ContratoCreateDTO createDTO);
     Task<bool> DeleteContrato(int id);

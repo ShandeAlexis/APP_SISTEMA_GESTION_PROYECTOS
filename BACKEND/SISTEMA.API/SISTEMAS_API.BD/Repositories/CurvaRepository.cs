@@ -29,4 +29,14 @@ public class CurvaRepository : ICurvaRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<IEnumerable<Curva>> GetCurvasByEntregableId(int entregableId)
+    {
+        return await _context.Curvas
+            .Include(c => c.TipoCurva)
+            .Include(c => c.Detalles)
+            .Where(c => c.CURVchOrigen == "ENTREGABLE" && c.CURVinIDOrigen == entregableId)
+            .ToListAsync();
+    }
+
+
 }

@@ -10,6 +10,9 @@ public interface IEntregableService
     // Task<PagedResult<CategoriaDTO>> GetCategoriasPaged(PagedRequest request);
     Task<IEnumerable<EntregableDTO>> GetEntregables();
     Task<EntregableDTO?> GetEntregable(int id);
+
+    Task<IEnumerable<EntregableDTO>> GetEntregablesByContratoId(int contratoId); // 👈 nuevo
+
     Task<EntregableDTO> CreateEntregable(EntregableCreateDTO entregableCreateDTO);
     Task<EntregableDTO?> UpdateEntregable(int id, EntregableCreateDTO createDTO);
     Task<bool> DeleteEntregable(int id);

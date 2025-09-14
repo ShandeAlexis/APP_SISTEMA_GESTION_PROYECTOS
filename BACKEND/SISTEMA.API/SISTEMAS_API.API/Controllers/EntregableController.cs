@@ -118,6 +118,24 @@ public class EntregableController : ControllerBase
         }
     }
 
+    [HttpGet("contrato/{contratoId}")]
+    public async Task<ActionResult<IEnumerable<EntregableDTO>>> GetEntregablesByContrato(int contratoId)
+    {
+        try
+        {
+            var entregables = await entregableService.GetEntregablesByContratoId(contratoId);
+            if (entregables == null || !entregables.Any())
+                return NotFound(new { mensaje = $"No se encontraron entregables para el contrato {contratoId}" });
+
+            return Ok(entregables);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { mensaje = Mensajes.Entregable.ErrorObtener, detalle = ex.Message });
+        }
+    }
+
+
 }
 
 

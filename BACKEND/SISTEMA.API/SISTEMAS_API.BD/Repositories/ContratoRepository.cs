@@ -27,6 +27,15 @@ public class ContratoRepository : IContratoRepository
             .FirstOrDefaultAsync(c => c.CONTinID == id);
     }
 
+    public async Task<IEnumerable<Contrato>> GetContratosByProyectoId(int proyectoId)
+{
+    return await _context.Contratos
+        .Include(c => c.Proyecto)
+        .Where(c => c.PROYinID == proyectoId)
+        .ToListAsync();
+}
+
+
     public async Task AddContrato(Contrato contrato)
     {
         await _context.Contratos.AddAsync(contrato);

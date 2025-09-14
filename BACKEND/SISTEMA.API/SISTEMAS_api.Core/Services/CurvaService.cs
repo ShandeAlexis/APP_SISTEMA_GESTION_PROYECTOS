@@ -1,5 +1,6 @@
 using System;
 using SISTEMA.API.SISTEMAS_api.Core.Interfaces;
+using SISTEMA.API.SISTEMAS_api.Core.Models.Curva;
 using SISTEMA.API.SISTEMAS_api.Core.Models.Entregable;
 using SISTEMA.API.SISTEMAS_API.BD.Entities;
 using SISTEMA.API.SISTEMAS_API.BD.Repositories;
@@ -70,8 +71,28 @@ public class CurvaService : ICurvaService
         await curvaRepository.DeleteCurva(curva);
         return true;
     }
+    public async Task<IEnumerable<CurvaDTO>> GetCurvasByEntregableId(int entregableId)
+    {
+        var curvas = await curvaRepository.GetCurvasByEntregableId(entregableId);
 
-
+        return curvas.Select(c => new CurvaDTO
+        {
+            Id = c.CURVinID,
+            Origen = c.CURVchOrigen,
+            OrigenId = c.CURVinIDOrigen,
+            FechaInicial = c.CURVdaFechaInicial,
+            FechaFinal = c.CURVdaFechaFin,
+            TipoCurvaCodigo = c.TCURVchCodigo,
+            Detalles = c.Detalles.Select(d => new DetalleCurvaUpdateDTO
+            {
+                Id = d.DCURinID,
+                Fecha = d.DCURdaFecha,
+                Valor = d.DCURreValor,
+                ValorAcumulado = d.DCURreValorAcum,
+                Posicion = d.DCURinPos
+            }).ToList()
+        });
+    }
 
 
 }

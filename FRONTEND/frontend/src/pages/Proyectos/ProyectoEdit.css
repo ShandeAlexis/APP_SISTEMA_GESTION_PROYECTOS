@@ -1,0 +1,108 @@
+/* --- CONTENEDOR --- */
+.edit-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 25px 30px;
+  background: #2c2c2c;
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.edit-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #4cafef;
+}
+
+/* --- FORMULARIO --- */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.edit-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.edit-form input,
+.edit-form select {
+  padding: 10px 12px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: none;
+  background: #1e1e1e;
+  color: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.edit-form input:focus,
+.edit-form select:focus {
+  outline: none;
+  border: 1px solid #4cafef;
+  box-shadow: 0 0 5px rgba(76, 175, 239, 0.5);
+}
+
+/* --- BOTONES --- */
+.form-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.form-buttons button {
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+  transition: 0.2s;
+  min-width: 120px;
+}
+
+.form-buttons button[type="submit"] {
+  background: #4CAF50;
+}
+
+.form-buttons button[type="submit"]:hover {
+  background: #45a049;
+}
+
+.form-buttons button[type="button"] {
+  background: #e74c3c;
+}
+
+.form-buttons button[type="button"]:hover {
+  background: #c0392b;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 600px) {
+  .edit-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .edit-form {
+    gap: 14px;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-buttons button {
+    width: 100%;
+  }
+}

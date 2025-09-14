@@ -1,8 +1,10 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import "./Layout.css"; // tu estilo del header
+import { useState } from "react";
+import "./Layout.css";
 
 const Layout = () => {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -11,20 +13,32 @@ const Layout = () => {
 
   return (
     <div className="app-layout">
-      <header className="main-header">
-        <h1>SISTEMA SYCP</h1>
-        <div>
-          <button onClick={() => navigate("/main")} className="nav-btn">
-            Inicio
-          </button>
-          <button onClick={handleLogout} className="logout-btn">
-            Cerrar Sesión
-          </button>
+      {/* Sidebar */}
+      <aside className={`sidebar ${menuOpen ? "open" : ""}`}>
+        <div className="logo">
+          <img src="https://pdci.com.pe/wp-content/uploads/2022/10/Mesa-de-trabajo-11-1024x328.png" alt="Logo" />
         </div>
-      </header>
 
-      {/* 👇 aquí cambia el contenido */}
+        <div className="menu">
+          <button onClick={() => { navigate("/main"); setMenuOpen(false); }}>🏠 Inicio</button>
+          <button onClick={() => { navigate("/proyectos"); setMenuOpen(false); }}>📂 Proyectos</button>
+          <button>📊 Reportes</button>
+          <button>📈 Curvas</button>
+          <button>💬 Mensajes</button>
+        </div>
+
+        <div className="logout">
+          <button onClick={handleLogout}>➜]</button>
+        </div>
+      </aside>
+
+      {/* Contenido */}
       <main className="main-content">
+        {/* Botón hamburguesa para móviles */}
+        <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+          ☰
+        </button>
+
         <Outlet />
       </main>
     </div>

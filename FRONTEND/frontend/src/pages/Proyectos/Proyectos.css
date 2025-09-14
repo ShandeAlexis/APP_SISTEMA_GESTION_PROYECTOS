@@ -1,0 +1,166 @@
+/* --- LISTADO --- */
+.proyectos-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
+  background: #2c2c2c;
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  padding: 20px 30px;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* ENCABEZADO */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #fff;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.filter select {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  background: #444;
+  color: #fff;
+}
+
+.nuevo-btn {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.nuevo-btn:hover {
+  background: #45a049;
+}
+
+/* TABLA */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+}
+
+thead th {
+  text-align: left;
+  padding: 12px 8px;
+  font-weight: 600;
+  border-bottom: 2px solid #4CAF50;
+}
+
+tbody td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #555;
+  color: #ddd;
+  background: #2a2a2a;
+}
+
+.contratos-btn {
+  background: #2196f3;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.contratos-btn:hover {
+  background: #1976d2;
+}
+
+.acciones-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.edit-btn {
+  background: #f39c12;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.edit-btn:hover {
+  background: #e67e22;
+}
+
+.delete-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.delete-btn:hover {
+  background: #c0392b;
+}
+
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+
+  thead { display: none; }
+
+  tbody tr {
+    margin-bottom: 15px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+
+  tbody td {
+    display: flex;
+    justify-content: space-between;
+    border: none;
+    padding: 8px 0;
+  }
+
+  tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #4cafef;
+    margin-right: 10px;
+  }
+
+  .action-buttons {
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+}

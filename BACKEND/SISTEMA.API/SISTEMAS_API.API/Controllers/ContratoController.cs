@@ -107,5 +107,24 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
             }
         }
 
+        [HttpGet("proyecto/{proyectoId}")]
+        public async Task<ActionResult<IEnumerable<ContratoDTO>>> GetContratosByProyecto(int proyectoId)
+        {
+            try
+            {
+                var contratos = await contratoService.GetContratosByProyectoId(proyectoId);
+                if (contratos == null || !contratos.Any())
+                    return NotFound(new { mensaje = $"No se encontraron contratos para el proyecto {proyectoId}" });
+
+                return Ok(contratos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = Mensajes.Contrato.ErrorObtener, detalle = ex.Message });
+            }
+        }
+
+
     }
+
 }
