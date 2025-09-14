@@ -1,0 +1,116 @@
+/* src/pages/Reporte/Reporte.css */
+
+.reporte-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #2c2c2c;       /* match app theme */
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+}
+
+.reporte-container h2 {
+  margin: 0 0 16px 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #f1f1f1;
+}
+
+/* Form layout: desktop uses a compact row, mobile stacks */
+.form-reporte {
+  display: flex;
+  gap: 16px;
+  align-items: end;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+/* Field wrapper (mejor mantener label + control juntos) */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+
+/* Label */
+.field label,
+.form-reporte > label {
+  font-size: 13px;
+  color: #d0d0d0;
+}
+
+/* Inputs & selects */
+.field select,
+.field input[type="date"],
+.form-reporte select,
+.form-reporte input[type="date"] {
+  background: #383838;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  outline: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  transition: box-shadow .15s ease, transform .06s ease;
+  min-width: 180px;
+}
+
+.field select:focus,
+.field input[type="date"]:focus,
+.form-reporte select:focus,
+.form-reporte input[type="date"]:focus {
+  box-shadow: 0 0 0 3px rgba(76,175,80,0.12);
+  border-color: #4caf50;
+}
+
+/* Botón generar */
+.generar-btn {
+  background: linear-gradient(90deg,#4CAF50,#45a049);
+  color: white;
+  border: none;
+  padding: 11px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  min-height: 44px;
+  align-self: center;
+  transition: transform .08s ease, box-shadow .12s ease;
+  box-shadow: 0 6px 16px rgba(69,160,73,0.15);
+}
+
+.generar-btn:hover { transform: translateY(-2px); }
+.generar-btn:active { transform: translateY(0); }
+.generar-btn:disabled {
+  background: #5f8a67;
+  cursor: not-allowed;
+  opacity: 0.85;
+  box-shadow: none;
+}
+
+/* Panel de resultados / preview (vacío por defecto) */
+.reporte-result {
+  margin-top: 20px;
+  background: #232323;
+  border-radius: 10px;
+  padding: 14px;
+  color: #e6e6e6;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  min-height: 120px;
+}
+
+/* Responsive: apilar en móvil */
+@media (max-width: 720px) {
+  .form-reporte {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .field { width: 100%; min-width: auto; }
+  .generar-btn { width: 100%; }
+}

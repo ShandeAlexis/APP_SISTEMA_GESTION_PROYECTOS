@@ -1,0 +1,106 @@
+.cronograma-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 25px auto;
+  padding: 25px;
+  background: #1c1c1c;
+  color: #eee;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+.cronograma-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  color: #4cafef;
+}
+
+/* filtros */
+.filtros-fechas {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.filtros-fechas label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ddd;
+}
+
+.filtros-fechas input {
+  margin-left: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  background: #2c2c2c;
+  color: #fff;
+  font-size: 14px;
+}
+
+.cronograma-grid {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.proyectos-lista {
+  flex: 1 1 38%;
+  overflow-x: auto;
+}
+
+.proyectos-lista table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #262626;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.proyectos-lista th,
+.proyectos-lista td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+.proyectos-lista th {
+  background: #333;
+  color: #f1f1f1;
+  font-weight: 600;
+}
+
+.proyectos-lista tr.even {
+  background: #2a2a2a;
+}
+
+.proyectos-lista tr.odd {
+  background: #242424;
+}
+
+.proyectos-lista tr:hover {
+  background: #3a3a3a;
+}
+
+.estado-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.grafico-gantt {
+  flex: 1 1 58%;
+  background: #262626;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+}

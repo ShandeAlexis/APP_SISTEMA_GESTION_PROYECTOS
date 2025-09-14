@@ -58,7 +58,7 @@ const ProyectosList = () => {
           "estimado",
           "codigoEstado",
           "contratos",
-          "acciones", // 👈 acciones vuelve
+          "acciones", 
         ]}
         data={filteredProyectos.map((p) => ({
           ...p,

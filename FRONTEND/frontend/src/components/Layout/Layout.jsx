@@ -22,9 +22,10 @@ const Layout = () => {
         <div className="menu">
           <button onClick={() => { navigate("/main"); setMenuOpen(false); }}>🏠 Inicio</button>
           <button onClick={() => { navigate("/proyectos"); setMenuOpen(false); }}>📂 Proyectos</button>
-          <button>📊 Reportes</button>
+          <button onClick={() => { navigate("/reportes"); setMenuOpen(false); }}>📊 Reportes</button>
           <button>📈 Curvas</button>
-          <button>💬 Mensajes</button>
+          <button  onClick={() => { navigate("/cronograma"); setMenuOpen(false); }}>📅 Cronograma </button>
+          <button>👤 Usuario </button>
         </div>
 
         <div className="logout">

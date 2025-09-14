@@ -58,15 +58,12 @@ const ContratosList = () => {
         <Table
           headers={[
             "codigo",
-            "codigoContrato",
             "contratista",
             "alcance",
-            "objetivo",
             "fechaInicial",
             "fechaFinal",
             "capex",
             "estimado",
-            "estadoCodigo",
             "entregables",
             "acciones",
           ]}

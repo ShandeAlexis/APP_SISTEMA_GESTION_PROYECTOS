@@ -12,6 +12,8 @@ import ProyectoEdit from "./pages/Proyectos/ProyectoEdit";
 import ProyectoAdd from "./pages/Proyectos/ProyectoAdd.jsx";
 import ContratosList from "./pages/Contrato/ContratosList.jsx";
 import EntregablesList from "./pages/Entregable/EntregablesList.jsx";
+import ReporteMain from "./pages/Reporte/ReporteMain.jsx";
+import Cronograma from "./pages/Cronograma/Cronograma.jsx";
 
 // Protege rutas privadas
 const PrivateRoute = ({ children }) => {
@@ -40,12 +42,13 @@ const App = () => {
           <Route path="/proyectos/editar/:id" element={<ProyectoEdit />} />
           {/* Contratos de un proyecto */}
           <Route path="/proyectos/:id/contratos" element={<ContratosList />} />
-
           {/* Entregables de un contrato */}
           <Route
             path="/proyectos/:id/contratos/:contratoId/entregables"
             element={<EntregablesList />}
           />
+          <Route path="/reportes" element={<ReporteMain />} />
+          <Route path="/cronograma" element={<Cronograma />} />
         </Route>
 
         {/* Default */}
