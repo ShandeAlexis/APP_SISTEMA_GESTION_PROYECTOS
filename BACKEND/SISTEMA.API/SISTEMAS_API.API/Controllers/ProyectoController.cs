@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SISTEMA.API.SISTEMAS_api.Core.Constantes;
 using SISTEMA.API.SISTEMAS_api.Core.Interfaces;
 using SISTEMA.API.SISTEMAS_api.Core.Models.Proyecto;
+using SISTEMA.API.SISTEMAS_API.BD.Entities;
 
 namespace SISTEMA.API.SISTEMAS_API.API.Controllers
 {
@@ -12,9 +13,12 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
     {
         private readonly IProyectoService proyectoService;
 
-        public ProyectoController(IProyectoService IproyectoService)
+        private readonly IReporteService reporteService;
+
+        public ProyectoController(IProyectoService IproyectoService, IReporteService IreporteService)
         {
             proyectoService = IproyectoService;
+            reporteService = IreporteService;
         }
 
         [HttpGet]
@@ -109,6 +113,19 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
             }
         }
 
-
+        // 🚀 NUEVO ENDPOINT PARA REPORTE
+        [HttpGet("{id}/reporte")]
+        public async Task<ActionResult<ReporteDTO>> GenerarReporte(int id, [FromQuery] DateTime fechaCorte)
+        {
+            try
+            {
+                var reporte = await reporteService.GenerarReporteAsync(id, fechaCorte);
+                return Ok(reporte);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al generar el reporte del proyecto", detalle = ex.Message });
+            }
+        }
     }
 }

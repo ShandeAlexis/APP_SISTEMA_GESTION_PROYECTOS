@@ -50,6 +50,7 @@ builder.Services.AddScoped<IContratoService, ContratoService>();
 builder.Services.AddScoped<IProyectoService, ProyectoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICurvaService, CurvaService>();
+builder.Services.AddScoped<IReporteService, ReporteService>();
 
 // ========================
 // Configuración JWT
