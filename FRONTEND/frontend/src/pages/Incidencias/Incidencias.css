@@ -1,0 +1,147 @@
+.incidencias-page {
+  color: #fff;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.incidencias-page h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.btn-agregar {
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.btn-agregar:hover {
+  background-color: #0056b3;
+}
+
+.incidencias-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.incidencias-table th,
+.incidencias-table td {
+  border: 1px solid #333;
+  padding: 10px;
+  text-align: left;
+}
+
+.incidencias-table th {
+  background-color: #2c2c2c;
+}
+
+.btn-editar,
+.btn-eliminar {
+  padding: 6px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-editar {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.btn-editar:hover {
+  background-color: #e0a800;
+}
+
+.btn-eliminar {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-eliminar:hover {
+  background-color: #b02a37;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #1e1e1e;
+  color: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: #2c2c2c;
+  color: #fff;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-guardar {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-guardar:hover {
+  background-color: #1e7e34;
+}
+
+.btn-cancelar {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-cancelar:hover {
+  background-color: #5a6268;
+}

@@ -4,6 +4,15 @@ namespace SISTEMA.API.SISTEMAS_api.Core.Constantes;
 
 public static class Mensajes
 {
+    public static class Incidencia
+    {
+        public const string NoEncontrado = "No se encontró la incidencia con ese ID.";
+        public const string ErrorCrear = "Error al crear la incidencia.";
+        public const string ErrorObtener = "Error al obtener la incidencia.";
+        public const string ErrorActualizar = "Ocurrió un error al actualizar la incidencia.";
+        public const string Eliminado = "La incidencia fue eliminada correctamente.";
+        public const string ErrorEliminar = "Error al eliminar la incidencia.";
+    }
     public static class Curva
     {
         public const string NoEncontrado = "No se encontró la curva con ese ID.";

@@ -14,4 +14,5 @@ public class SISTEMAS_API_DBContext : DbContext
 
     public DbSet<Curva> Curvas { get; set; } = null!;
     public DbSet<DetalleCurva> DetalleCurvas { get; set; } = null!;
+    public DbSet<Incidencia> Incidencias { get; set; } = null!;
 }

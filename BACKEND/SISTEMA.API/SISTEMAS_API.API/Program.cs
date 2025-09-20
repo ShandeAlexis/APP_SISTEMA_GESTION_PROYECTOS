@@ -42,6 +42,7 @@ builder.Services.AddScoped<IContratoRepository, ContratoRepository>();
 builder.Services.AddScoped<IProyectoRepository, ProyectoRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ICurvaRepository, CurvaRepository>();
+builder.Services.AddScoped<IIncidenciaRepository, IncidenciaRepository>();
 // ========================
 // Registrar servicios Core
 // ========================
@@ -51,6 +52,7 @@ builder.Services.AddScoped<IProyectoService, ProyectoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICurvaService, CurvaService>();
 builder.Services.AddScoped<IReporteService, ReporteService>();
+builder.Services.AddScoped<IIncidenciaService, IncidenciaService>();
 
 // ========================
 // Configuración JWT

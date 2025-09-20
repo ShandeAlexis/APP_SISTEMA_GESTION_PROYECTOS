@@ -28,7 +28,7 @@ const Layout = () => {
           <button onClick={() => { navigate("/main"); setMenuOpen(false); }}>🏠 Inicio</button>
           <button onClick={() => { navigate("/proyectos"); setMenuOpen(false); }}>📂 Proyectos</button>
           <button onClick={() => { navigate("/reportes"); setMenuOpen(false); }}>📊 Reportes</button>
-          <button>📈 Curvas</button>
+          <button onClick={() => { navigate("/incidencias"); setMenuOpen(false); }}>🚨 Incidencias</button>
           <button onClick={() => { navigate("/cronograma"); setMenuOpen(false); }}>📅 Cronograma </button>
 
           {/* 👇 Solo visible si es ADMIN */}
