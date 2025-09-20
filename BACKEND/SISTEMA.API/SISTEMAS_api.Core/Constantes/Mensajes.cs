@@ -4,6 +4,16 @@ namespace SISTEMA.API.SISTEMAS_api.Core.Constantes;
 
 public static class Mensajes
 {
+    public static class Curva
+    {
+        public const string NoEncontrado = "No se encontró la curva con ese ID.";
+        public const string ErrorCrear = "Error al crear la curva.";
+        public const string ErrorObtener = "Error al obtener la curva.";
+        public const string ErrorActualizar = "Ocurrió un error al actualizar la curva.";
+        public const string ErrorEliminar = "Error al eliminar la curva.";
+        public const string ErrorCalcular = "Error al calcular las curvas del contrato.";
+    }
+
     public static class Usuario
     {
         public const string ErrorObtener = "Error al obtener los usuarios.";
@@ -45,6 +55,7 @@ public static class Mensajes
         public const string Eliminado = "El entregable fue eliminado correctamente.";
         public const string ErrorEliminar = "Error al eliminar el entregable.";
     }
+
 
     public static class General
     {

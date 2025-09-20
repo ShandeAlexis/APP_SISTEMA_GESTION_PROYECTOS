@@ -113,7 +113,6 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
             }
         }
 
-        // 🚀 NUEVO ENDPOINT PARA REPORTE
         [HttpGet("{id}/reporte")]
         public async Task<ActionResult<ReporteDTO>> GenerarReporte(int id, [FromQuery] DateTime fechaCorte)
         {

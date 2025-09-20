@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SISTEMA.API.SISTEMAS_api.Core.Constantes;
 using SISTEMA.API.SISTEMAS_api.Core.Interfaces;
 using SISTEMA.API.SISTEMAS_api.Core.Models.Contrato;
+using SISTEMA.API.SISTEMAS_api.Core.Models.Curva;
 
 namespace SISTEMA.API.SISTEMAS_API.API.Controllers
 {
@@ -125,6 +126,28 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
         }
 
 
-    }
 
+        [HttpGet("{id}/curvas")]
+        public async Task<ActionResult<IEnumerable<CurvaDTO>>> GetCurvasContrato(int id, [FromQuery] string tipoCurva)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(tipoCurva))
+                    return BadRequest(new { mensaje = "Debe especificar el tipo de curva" });
+
+                var curvas = await contratoService.CalculateCurvasForContratoAsync(id, tipoCurva);
+
+                if (curvas == null || !curvas.Any())
+                    return NotFound(new { mensaje = $"No se encontraron curvas para el contrato {id} y tipo {tipoCurva}" });
+
+                return Ok(curvas);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al calcular curvas del contrato", detalle = ex.Message });
+            }
+        }
+
+
+    }
 }

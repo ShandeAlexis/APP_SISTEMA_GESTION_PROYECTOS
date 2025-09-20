@@ -2,6 +2,7 @@
 using SISTEMA.API.SISTEMAS_api.Core.Constantes;
 using SISTEMA.API.SISTEMAS_api.Core.Interfaces;
 using SISTEMA.API.SISTEMAS_api.Core.Models.Contrato;
+using SISTEMA.API.SISTEMAS_api.Core.Models.Curva;
 using SISTEMA.API.SISTEMAS_API.BD.Entities;
 using SISTEMA.API.SISTEMAS_API.BD.Repositories;
 
@@ -11,9 +12,15 @@ public class ContratoService : IContratoService
 {
     private readonly IContratoRepository contratoRepository;
 
-    public ContratoService(IContratoRepository contratoRepo)
+    private readonly IEntregableRepository entregableRepository;
+
+    private readonly ICurvaService curvaService;
+
+    public ContratoService(IContratoRepository contratoRepo, IEntregableRepository entregableRepo, ICurvaService curvaSvc)
     {
         contratoRepository = contratoRepo;
+        entregableRepository = entregableRepo;
+        curvaService = curvaSvc;
     }
 
     public async Task<IEnumerable<ContratoDTO>> GetContratos()
@@ -170,4 +177,119 @@ public class ContratoService : IContratoService
     {
         return await contratoRepository.DeleteContrato(id);
     }
+
+    public async Task<IEnumerable<CurvaDTO>> CalculateCurvasForContratoAsync(int idContrato, string tipoCurva)
+    {
+        string tipoEntregable;
+        string tipoCurvaOrigen;
+
+        switch (tipoCurva.ToUpper())
+        {
+            case "CRV_PLAN_FIS":
+                tipoEntregable = "Fis";
+                tipoCurvaOrigen = "CRV_PLAN_VIG";
+                break;
+            case "CRV_REAL_FIS":
+                tipoEntregable = "Fis";
+                tipoCurvaOrigen = "CRV_REAL_VIG";
+                break;
+            case "CRV_PLAN_ECO":
+                tipoEntregable = "Eco";
+                tipoCurvaOrigen = "CRV_PLAN_VIG";
+                break;
+            case "CRV_REAL_ECO":
+                tipoEntregable = "Eco";
+                tipoCurvaOrigen = "CRV_REAL_VIG";
+                break;
+            default:
+                throw new ArgumentException($"Tipo de curva no válido: {tipoCurva}");
+        }
+
+        var entregables = (await entregableRepository.GetEntregablesByContratoId(idContrato))
+                            .Where(e => string.Equals(e.TENTchCodigo?.Trim(), tipoEntregable, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+
+        if (!entregables.Any())
+            return new List<CurvaDTO>();
+
+        var curvasAcumuladas = new List<CurvaDTO>();
+
+        foreach (var entregable in entregables)
+        {
+            var curvasEntregable = await curvaService.GetCurvasByEntregableId(entregable.ENTRinID);
+            if (curvasEntregable == null || !curvasEntregable.Any())
+                continue;
+
+            foreach (var curvaEnt in curvasEntregable)
+            {
+                if (!string.Equals(curvaEnt.TipoCurvaCodigo?.Trim(), tipoCurvaOrigen, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var curvaAcum = curvasAcumuladas.FirstOrDefault(c => string.Equals(c.TipoCurvaCodigo, tipoCurva, StringComparison.OrdinalIgnoreCase));
+
+                if (curvaAcum == null)
+                {
+                    curvaAcum = new CurvaDTO
+                    {
+                        Id = 0,
+                        Origen = "CONTRATO",
+                        OrigenId = idContrato,
+                        FechaInicial = curvaEnt.FechaInicial,
+                        FechaFinal = curvaEnt.FechaFinal,
+                        TipoCurvaCodigo = tipoCurva,
+                        Detalles = curvaEnt.Detalles
+                            .Select(d => new DetalleCurvaUpdateDTO
+                            {
+                                Id = d.Id,
+                                Fecha = d.Fecha,
+                                Valor = Math.Round(d.Valor * entregable.ENTRdePctContrato, 2),
+                                ValorAcumulado = 0, // se calculará abajo
+                                Posicion = d.Posicion
+                            }).ToList()
+                    };
+
+                    curvasAcumuladas.Add(curvaAcum);
+                }
+                else
+                {
+                    foreach (var detalleEnt in curvaEnt.Detalles)
+                    {
+                        var detalleAcum = curvaAcum.Detalles.FirstOrDefault(d => d.Fecha == detalleEnt.Fecha);
+                        if (detalleAcum != null)
+                        {
+                            detalleAcum.Valor += Math.Round(detalleEnt.Valor * entregable.ENTRdePctContrato, 2);
+                        }
+                        else
+                        {
+                            curvaAcum.Detalles.Add(new DetalleCurvaUpdateDTO
+                            {
+                                Id = detalleEnt.Id,
+                                Fecha = detalleEnt.Fecha,
+                                Valor = Math.Round(detalleEnt.Valor * entregable.ENTRdePctContrato, 2),
+                                ValorAcumulado = 0,
+                                Posicion = detalleEnt.Posicion
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        // Calcular acumulado mes a mes con 2 decimales
+        foreach (var curva in curvasAcumuladas)
+        {
+            decimal acumulado = 0;
+            foreach (var detalle in curva.Detalles.OrderBy(d => d.Fecha))
+            {
+                acumulado += detalle.Valor;
+                detalle.ValorAcumulado = Math.Round(acumulado, 2);
+            }
+        }
+
+        return curvasAcumuladas;
+    }
+
+
+
+
 }
