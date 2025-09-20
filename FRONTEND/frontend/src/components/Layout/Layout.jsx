@@ -1,10 +1,12 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth"; // 👈
 import "./Layout.css";
 
 const Layout = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useAuth(); // 👈 rol desde el token
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -16,7 +18,10 @@ const Layout = () => {
       {/* Sidebar */}
       <aside className={`sidebar ${menuOpen ? "open" : ""}`}>
         <div className="logo">
-          <img src="https://pdci.com.pe/wp-content/uploads/2022/10/Mesa-de-trabajo-11-1024x328.png" alt="Logo" />
+          <img
+            src="https://pdci.com.pe/wp-content/uploads/2022/10/Mesa-de-trabajo-11-1024x328.png"
+            alt="Logo"
+          />
         </div>
 
         <div className="menu">
@@ -24,12 +29,16 @@ const Layout = () => {
           <button onClick={() => { navigate("/proyectos"); setMenuOpen(false); }}>📂 Proyectos</button>
           <button onClick={() => { navigate("/reportes"); setMenuOpen(false); }}>📊 Reportes</button>
           <button>📈 Curvas</button>
-          <button  onClick={() => { navigate("/cronograma"); setMenuOpen(false); }}>📅 Cronograma </button>
-          <button>👤 Usuario </button>
+          <button onClick={() => { navigate("/cronograma"); setMenuOpen(false); }}>📅 Cronograma </button>
+
+          {/* 👇 Solo visible si es ADMIN */}
+          {user?.role === "ADMIN" && (
+            <button onClick={() => { navigate("/usuarios"); setMenuOpen(false); }}>👤 Usuarios</button>
+          )}
         </div>
 
         <div className="logout">
-          <button onClick={handleLogout}>➜]</button>
+          <button onClick={handleLogout}>➜</button>
         </div>
       </aside>
 

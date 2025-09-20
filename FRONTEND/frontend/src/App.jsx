@@ -14,6 +14,7 @@ import ContratosList from "./pages/Contrato/ContratosList.jsx";
 import EntregablesList from "./pages/Entregable/EntregablesList.jsx";
 import ReporteMain from "./pages/Reporte/ReporteMain.jsx";
 import Cronograma from "./pages/Cronograma/Cronograma.jsx";
+import Usuario from "./pages/Usuario/Usuario.jsx";
 
 // Protege rutas privadas
 const PrivateRoute = ({ children }) => {
@@ -49,6 +50,9 @@ const App = () => {
           />
           <Route path="/reportes" element={<ReporteMain />} />
           <Route path="/cronograma" element={<Cronograma />} />
+
+
+          <Route path="/usuarios" element={<Usuario />} />
         </Route>
 
         {/* Default */}

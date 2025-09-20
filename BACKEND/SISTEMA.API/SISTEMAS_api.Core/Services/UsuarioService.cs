@@ -30,7 +30,8 @@ public class UsuarioService : IUsuarioService
         {
             Id = u.USUAinID,
             Nombre = u.USUAchNombre,
-            Email = u.USUAchEmail
+            Email = u.USUAchEmail,
+            Rol = u.Rol?.ROLchNombre ?? string.Empty
         });
     }
 
@@ -43,7 +44,8 @@ public class UsuarioService : IUsuarioService
         {
             Id = u.USUAinID,
             Nombre = u.USUAchNombre,
-            Email = u.USUAchEmail
+            Email = u.USUAchEmail,
+            Rol = u.Rol?.ROLchNombre ?? string.Empty
         };
     }
 
@@ -53,7 +55,8 @@ public class UsuarioService : IUsuarioService
         {
             USUAchNombre = usuarioCreateDTO.Nombre,
             USUAchEmail = usuarioCreateDTO.Email,
-            USUAchPassword = HashPassword(usuarioCreateDTO.Password)
+            USUAchPassword = HashPassword(usuarioCreateDTO.Password),
+            ROLinID = usuarioCreateDTO.RolId
         };
 
         await usuarioRepository.AddUsuario(nuevoUsuario);
@@ -66,7 +69,8 @@ public class UsuarioService : IUsuarioService
         {
             Id = usuarioGuardado.USUAinID,
             Nombre = usuarioGuardado.USUAchNombre,
-            Email = usuarioGuardado.USUAchEmail
+            Email = usuarioGuardado.USUAchEmail,
+            Rol = usuarioGuardado.Rol?.ROLchNombre ?? string.Empty
         };
     }
 
@@ -78,6 +82,7 @@ public class UsuarioService : IUsuarioService
 
         existingUsuario.USUAchNombre = usuarioCreateDTO.Nombre;
         existingUsuario.USUAchEmail = usuarioCreateDTO.Email;
+        existingUsuario.ROLinID = usuarioCreateDTO.RolId;
 
         if (!string.IsNullOrWhiteSpace(usuarioCreateDTO.Password))
             existingUsuario.USUAchPassword = HashPassword(usuarioCreateDTO.Password);
@@ -88,7 +93,8 @@ public class UsuarioService : IUsuarioService
         {
             Id = existingUsuario.USUAinID,
             Nombre = existingUsuario.USUAchNombre,
-            Email = existingUsuario.USUAchEmail
+            Email = existingUsuario.USUAchEmail,
+            Rol = existingUsuario.Rol?.ROLchNombre ?? string.Empty
         };
     }
 
@@ -114,7 +120,8 @@ public class UsuarioService : IUsuarioService
         {
             Id = usuario.USUAinID,
             Nombre = usuario.USUAchNombre,
-            Email = usuario.USUAchEmail
+            Email = usuario.USUAchEmail,
+            Rol = usuario.Rol?.ROLchNombre ?? string.Empty
         };
 
         return new AuthResponseDTO
@@ -139,6 +146,7 @@ public class UsuarioService : IUsuarioService
         {
             new Claim(JwtRegisteredClaimNames.Sub, usuario.USUAchEmail),
             new Claim("nombre", usuario.USUAchNombre),
+             new Claim(ClaimTypes.Role, usuario.Rol.ROLchNombre), 
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
