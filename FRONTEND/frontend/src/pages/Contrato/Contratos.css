@@ -1,156 +1,171 @@
-.contratos-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 20px auto;
-  background: #2c2c2c;
+.contratos-page {
   color: #fff;
-  border-radius: 12px;
+  padding: 20px;
+     border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  padding: 20px 30px;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   margin-bottom: 20px;
 }
 
-.header h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: #fff;
+.acciones-header {
+  display: flex;
+  gap: 10px;
 }
 
-.nuevo-btn {
-  background: #4caf50;
-  color: white;
+/* 🎨 Botones */
+button {
   border: none;
-  padding: 8px 15px;
+  padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
+  transition: 0.2s ease;
   font-size: 14px;
-  transition: 0.2s;
-}
-.nuevo-btn:hover {
-  background: #45a049;
 }
 
-.acciones-btns {
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+.btn-secondary:hover {
+  background: #565e64;
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+.btn-success:hover {
+  background: #218838;
+}
+
+.btn-info {
+  background: #17a2b8;
+  color: white;
+}
+.btn-info:hover {
+  background: #117a8b;
+}
+
+.btn-warning {
+  background: #ffc107;
+  color: black;
+}
+.btn-warning:hover {
+  background: #e0a800;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+}
+.btn-danger:hover {
+  background: #bd2130;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead {
+  background: #333;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+tbody tr:hover {
+  background: #2a2a2a;
+}
+
+.acciones {
   display: flex;
   gap: 6px;
 }
 
-.edit-btn,
-.delete-btn {
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-  font-size: 14px;
+/* 🎨 Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.edit-btn {
-  background: #f39c12;
-  color: white;
-}
-.edit-btn:hover {
-  background: #e67e22;
-}
-
-.delete-btn {
-  background: #e74c3c;
-  color: white;
-}
-.delete-btn:hover {
-  background: #c0392b;
+.modal-content {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
-.back-btn {
-  margin-top: 20px;
-  background: #2196f3;
+/* Scroll más limpio */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+.modal-content h2 {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.form-grid .full-width {
+  grid-column: span 2;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  background: #2c2c2c;
+  border: 1px solid #444;
   color: white;
-  border: none;
-  padding: 8px 15px;
+  padding: 8px;
   border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.back-btn:hover {
-  background: #1976d2;
-}
-.view-btn {
-  background: #3498db;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.view-btn:hover {
-  background: #2980b9;
-}
-/* Wrapper para la tabla */
-.table-wrapper {
   width: 100%;
-  overflow-x: auto;  /* 👈 Scroll horizontal si se pasa del ancho */
-  margin-top: 15px;
 }
 
-.table-wrapper table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 1000px; /* 👈 fuerza a que no se achiquen demasiado */
-}
-
-/* --- 📱 Responsive --- */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  table,
-  thead,
-  tbody,
-  th,
-  td,
-  tr {
-    display: block;
-    width: 100%;
-  }
-
-  thead {
-    display: none; /* ocultamos encabezados en móvil */
-  }
-
-  tbody tr {
-    margin-bottom: 15px;
-    border-bottom: 2px solid #444;
-    padding: 10px 0;
-  }
-
-  tbody td {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    font-size: 14px;
-  }
-
-  tbody td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    color: #bbb;
-  }
-
-  .acciones-btns {
-    justify-content: flex-end;
-  }
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 16px;
 }

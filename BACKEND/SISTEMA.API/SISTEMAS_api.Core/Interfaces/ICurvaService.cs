@@ -8,12 +8,7 @@ public interface ICurvaService
 {
     Task<IEnumerable<CurvaMensualDTO>?> GetCurvaAsync(int curvaId);
     Task<bool> UpdateCurvaAsync(int curvaId, IEnumerable<CurvaMensualDTO> nuevosDetalles);
-
     Task<bool> DeleteCurvaAsync(int curvaId);
-
-
     Task<IEnumerable<CurvaDTO>> GetCurvasByEntregableId(int entregableId);
-
-
 
 }

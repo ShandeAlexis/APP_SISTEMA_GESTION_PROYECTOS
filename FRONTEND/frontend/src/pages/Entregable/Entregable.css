@@ -1,203 +1,227 @@
 .entregables-container {
-  width: 100%;
-  max-width: 1300px;
-  margin: 20px auto;
-  background: #2c2c2c;
   color: #fff;
+  padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  padding: 20px 30px;
-  box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, sans-serif;
 }
 
-/* 🔹 Encabezado */
-.header {
+.entregables-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   margin-bottom: 20px;
 }
 
-.header h2 {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 600;
-  color: #f1f1f1;
-}
-
-/* 🔹 Botones */
-.nuevo-btn,
-.edit-btn,
-.delete-btn,
-.back-btn,
-.save-btn {
+.entregables-nuevo-btn {
+  background: #007bff;
+  color: white;
   border: none;
+  padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
-  padding: 6px 12px;
-  transition: 0.2s;
-  font-weight: 500;
+  transition: 0.2s ease;
+}
+.entregables-nuevo-btn:hover {
+  background: #0056b3;
 }
 
-.nuevo-btn {
-  background: #4caf50;
-  color: white;
-}
-.nuevo-btn:hover {
-  background: #45a049;
+/* 🎨 Tabla */
+.entregables-table-wrapper {
+  overflow-x: auto;
 }
 
-.edit-btn {
-  background: #f39c12;
-  color: white;
-}
-.edit-btn:hover {
-  background: #e67e22;
-}
-
-.delete-btn {
-  background: #e74c3c;
-  color: white;
-}
-.delete-btn:hover {
-  background: #c0392b;
+.entregables-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.back-btn {
-  margin-top: 20px;
-  background: #2196f3;
-  color: white;
-}
-.back-btn:hover {
-  background: #1976d2;
+.entregables-table thead {
+  background: #333;
 }
 
-.save-btn {
-  margin-top: 10px;
-  padding: 8px 12px;
-  background: #4caf50;
-  color: white;
-  border-radius: 6px;
-}
-.save-btn:hover {
-  background: #45a049;
+.entregables-table th,
+.entregables-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #444;
 }
 
-.acciones-btns {
+.entregables-table tbody tr:hover {
+  background: #2a2a2a;
+}
+
+/* 🎨 Botones de acciones */
+.entregables-acciones-btns {
   display: flex;
   gap: 6px;
 }
 
-/* 🔹 Tabla Entregables */
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  margin-top: 15px;
+.entregables-edit-btn,
+.entregables-delete-btn,
+.entregables-view-btn {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
-.table-wrapper table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 800px;
+.entregables-edit-btn {
+  background: #ffc107;
+  color: black;
+}
+.entregables-edit-btn:hover {
+  background: #e0a800;
 }
 
-.table-wrapper th,
-.table-wrapper td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #444;
-  white-space: nowrap;
+.entregables-delete-btn {
+  background: #dc3545;
+  color: white;
+}
+.entregables-delete-btn:hover {
+  background: #bd2130;
 }
 
-/* 🔹 Card Curva */
-.curva-card {
+.entregables-view-btn {
+  background: #17a2b8;
+  color: white;
+}
+.entregables-view-btn:hover {
+  background: #117a8b;
+}
+
+/* 🎨 Footer */
+.entregables-footer-btns {
   margin-top: 20px;
-  padding: 15px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.entregables-back-btn {
+  background: #6c757d;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.entregables-back-btn:hover {
+  background: #565e64;
+}
+
+/* 🎨 Modal */
+.entregables-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.entregables-modal {
   background: #1e1e1e;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  width: 700px;
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
-.curva-card h3 {
-  margin-bottom: 15px;
-  font-size: 18px;
-  color: #f1f1f1;
+/* Scroll limpio */
+.entregables-modal::-webkit-scrollbar {
+  width: 6px;
+}
+.entregables-modal::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+.entregables-modal::-webkit-scrollbar-thumb:hover {
+  background: #777;
 }
 
-.chart-wrapper {
-  position: relative;
-  width: 100%;
-  height: 400px; /* escritorio */
-  margin-bottom: 25px;
+/* Título modal */
+.entregables-modal-title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
-/* 🔹 Accordion Curvas */
-.curvas-wrapper {
+/* 🎨 Formulario en grid */
+.entregables-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.entregables-form-grid label {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  font-size: 14px;
+  color: #ddd;
 }
 
-.curva-form {
+.entregables-form-grid input,
+.entregables-form-grid select {
   background: #2c2c2c;
-  border-radius: 10px;
-  padding: 15px;
-  overflow-x: auto; /* scroll horizontal si es muy largo */
-}
-
-.curva-form h4 {
-  margin-bottom: 10px;
-  color: #f1f1f1;
-  cursor: pointer;
-  padding: 10px;
-  background: #333;
-  border-radius: 6px;
-  transition: background 0.2s;
-}
-.curva-form h4:hover {
-  background: #444;
-}
-
-/* 🔹 Tabla de curvas horizontales */
-.curva-form table {
-  width: max-content; /* tabla se expande al contenido */
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.curva-form th,
-.curva-form td {
-  padding: 6px 10px;
   border: 1px solid #444;
-  text-align: center;
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+  width: 100%;
+  margin-top: 4px;
+  font-size: 14px;
 }
 
-.curva-form input {
-  width: 80px;
-  padding: 4px;
-  border-radius: 4px;
+/* ❌ Quitamos max-width de los números */
+.entregables-form-grid input[type="number"] {
+  max-width: 100%;
+}
+
+/* 🎨 Acciones del formulario */
+.entregables-form-buttons {
+  grid-column: span 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.entregables-save-btn {
+  background: #28a745;
+  color: white;
+  padding: 8px 14px;
   border: none;
-  background: #444;
-  color: #fff;
-  text-align: right;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.entregables-save-btn:hover {
+  background: #218838;
 }
 
-/* 📱 Responsive */
+.entregables-cancel-btn {
+  background: #dc3545;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.entregables-cancel-btn:hover {
+  background: #bd2130;
+}
+
+/* 🎨 Responsive */
 @media (max-width: 768px) {
-  .chart-wrapper {
-    height: 250px;
+  .entregables-form-grid {
+    grid-template-columns: 1fr;
   }
-
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .curva-form input {
-    width: 60px;
+  .entregables-modal {
+    width: 95%;
   }
 }

@@ -1,128 +1,45 @@
-/* * {
+* {
   box-sizing: border-box;
 }
 
 .main-page {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background:  #b4b2b2;
+  background: #1e1e1e;
   color: #fff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-.main-page, .main-content {
-  width: 100%;
-  flex: 1;
   padding: 20px;
-  box-sizing: border-box;
-}
-
-.main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #222;
-  padding: 15px 20px;
-  border-bottom: 2px solid #4CAF50;
-}
-
-.main-header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.logout-btn {
-  background: linear-gradient(90deg, #e74c3c, #c0392b);
-  border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.logout-btn:hover {
-  background: linear-gradient(90deg, #c0392b, #a93226);
-}
-
-.main-content {
-  flex: 1;
-  padding: 20px;
-  text-align: center;
 }
 
 #welcomeMsg {
   margin-bottom: 30px;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
 }
 
-.card-container {
+.dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 20px;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 10px;
 }
 
-
 .card {
-  background: #2a2a2a;
-  padding: 25px 15px;
+  background: #2c2c2c;
+  padding: 25px 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  font-size: 1rem;
-  transition: transform 0.2s, background 0.2s;
-  cursor: pointer;
-  text-align: center;
-  word-wrap: break-word;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease-in-out, background 0.2s ease-in-out;
 }
 
 .card:hover {
   transform: translateY(-5px);
   background: #333;
-}
-
-
-@media (max-width: 480px) {
-  #welcomeMsg {
-    font-size: 1.1rem;
-  }
-
-  .card {
-    padding: 20px 10px;
-    font-size: 0.9rem;
-  }
-
-  .nav-btn, .logout-btn {
-    font-size: 12px;
-    padding: 6px 10px;
-  }
-} */
-.main-page {
-  padding: 20px;
-  color: #fff;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-}
-
-#welcomeMsg {
-  font-size: 22px;
-  margin-bottom: 20px;
-}
-
-.dashboard {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.card {
-  background: #2c2c2c;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .total-card {
@@ -133,9 +50,10 @@
 }
 
 .total-number {
-  font-size: 40px;
+  font-size: 45px;
   font-weight: bold;
   color: #4caf50;
+  margin-top: 10px;
 }
 
 .chart-card {

@@ -1,166 +1,188 @@
-/* --- LISTADO --- */
-.proyectos-container {
-  width: 100%;
-  max-width: 1000px;
-  margin: 20px auto;
-  background: #2c2c2c;
-  color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  padding: 20px 30px;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
+.proyectos-page {
+  color: white;
+
+  padding: 20px;
+    border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* ENCABEZADO */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
 }
 
-.header h2 {
+.header h1 {
   margin: 0;
-  font-size: 20px;
-  color: #fff;
 }
 
-.filter {
+.actions {
   display: flex;
-  align-items: center;
   gap: 10px;
-  margin-top: 10px;
 }
 
-.filter select {
-  padding: 6px 10px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  background: #444;
-  color: #fff;
-}
-
-.nuevo-btn {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.2s;
-}
-
-.nuevo-btn:hover {
-  background: #45a049;
-}
-
-/* TABLA */
-table {
+.proyectos-table {
   width: 100%;
   border-collapse: collapse;
-  color: #fff;
+  margin-top: 20px;
 }
 
-thead th {
+.proyectos-table th,
+.proyectos-table td {
+  border: 1px solid #444;
+  padding: 10px;
   text-align: left;
-  padding: 12px 8px;
-  font-weight: 600;
-  border-bottom: 2px solid #4CAF50;
 }
 
-tbody td {
-  padding: 12px 8px;
-  border-bottom: 1px solid #555;
-  color: #ddd;
-  background: #2a2a2a;
+.proyectos-table th {
+  background: #222;
 }
 
-.contratos-btn {
-  background: #2196f3;
-  color: white;
+.btn-agregar,
+.btn-editar,
+.btn-eliminar,
+.btn-cancelar,
+.btn-guardar,
+.btn-contratos {
+  margin: 2px;
+  padding: 6px 12px;
   border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn-agregar {
+  background: green;
+  color: white;
+}
+
+.btn-editar {
+  background: orange;
+  color: white;
+}
+
+.btn-eliminar {
+  background: red;
+  color: white;
+}
+
+.btn-contratos {
+  background: #007bff;
+  color: white;
+}
+
+.btn-guardar {
+  background: green;
+  color: white;
+}
+
+.btn-cancelar {
+  background: gray;
+  color: white;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  width: 500px;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+
+/* ==========================
+   Estilos para filtro (select + botón)
+   ========================== */
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Estilo del select (filtro) */
+.actions select,
+.filter-select {
+  background: #252525;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  outline: none;
+  font-size: 14px;
+  min-width: 180px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* foco visual claro */
+.actions select:focus,
+.filter-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 4px rgba(0,123,255,0.08);
+}
+
+/* Botón opcional "Aplicar filtro" */
+.filter-btn {
+  background: #343a40;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
   cursor: pointer;
   font-size: 14px;
-  transition: 0.2s;
+  transition: background 0.18s ease, transform 0.06s ease;
 }
 
-.contratos-btn:hover {
-  background: #1976d2;
+.filter-btn:hover {
+  background: #495057;
+  transform: translateY(-1px);
 }
 
-.acciones-btns {
-  display: flex;
-  gap: 6px;
+.filter-btn:active {
+  transform: translateY(0);
 }
 
-.edit-btn {
-  background: #f39c12;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.edit-btn:hover {
-  background: #e67e22;
-}
-
-.delete-btn {
-  background: #e74c3c;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.delete-btn:hover {
-  background: #c0392b;
-}
-
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  table, thead, tbody, th, td, tr {
-    display: block;
+/* Ajustes responsivos: en móviles apilan y ocupan todo el ancho */
+@media (max-width: 640px) {
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .actions select,
+  .filter-btn,
+  .btn-agregar {
     width: 100%;
-  }
-
-  thead { display: none; }
-
-  tbody tr {
-    margin-bottom: 15px;
-    background: #2a2a2a;
-    border-radius: 10px;
-    padding: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  }
-
-  tbody td {
-    display: flex;
-    justify-content: space-between;
-    border: none;
-    padding: 8px 0;
-  }
-
-  tbody td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #4cafef;
-    margin-right: 10px;
-  }
-
-  .action-buttons {
-    justify-content: flex-end;
-    margin-top: 10px;
   }
 }
