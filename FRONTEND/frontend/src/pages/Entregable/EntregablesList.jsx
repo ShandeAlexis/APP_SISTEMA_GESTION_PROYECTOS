@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import {
   getEntregablesByContrato,
   createEntregable,
@@ -12,7 +13,6 @@ import {
   updateCurva,
 } from "../../services/curvasService";
 import CurvaChart from "../../components/CurvaChart/CurvaChart";
-import CurvaForm from "../../components/CurvaForm/CurvaForm";
 import "./Entregable.css";
 
 const EntregablesList = () => {
@@ -24,6 +24,7 @@ const EntregablesList = () => {
   const [editingData, setEditingData] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [showCurvaModal, setShowCurvaModal] = useState(false);
 
   const [formEntregable, setFormEntregable] = useState({
     codigo: "",
@@ -37,13 +38,11 @@ const EntregablesList = () => {
     edtchCodigo: "ING",
   });
 
-  // --------- Helpers para porcentajes y parsing seguros ----------
+  // --------- Helpers ----------
   const displayPct = (value) => {
-    // Recibe valor que puede ser decimal (0-1) o porcentaje (0-100)
     if (value === null || value === undefined || value === "") return "";
     const n = Number(value);
     if (Number.isNaN(n)) return "";
-    // Si viene > 1 asumimos ya está en % (ej 50 ó 100), si viene <=1 asumimos decimal y multiplicamos
     return n > 1 ? n : n * 100;
   };
 
@@ -55,13 +54,11 @@ const EntregablesList = () => {
   };
 
   const normalizePctBeforeSave = (inputValue) => {
-    // inputValue proviene del form: esperamos que usuario use 0-100
-    if (inputValue === null || inputValue === undefined || inputValue === "") return null;
+    if (inputValue === null || inputValue === undefined || inputValue === "")
+      return null;
     const n = Number(String(inputValue).replace(",", "."));
     if (Number.isNaN(n)) return null;
-    // Si usuario ingresó >1 lo interpretamos como porcentaje y lo convertimos a decimal
     if (n > 1) return n / 100;
-    // Si ingresó 0<=n<=1 lo tomamos como decimal
     return n;
   };
 
@@ -69,6 +66,14 @@ const EntregablesList = () => {
     if (v === null || v === undefined || v === "") return null;
     const n = parseInt(v, 10);
     return Number.isNaN(n) ? null : n;
+  };
+
+  const calcularAcumulado = (detalles) => {
+    let acumulado = 0;
+    return detalles.map((d) => {
+      acumulado += Number(d.valor) || 0;
+      return { ...d, valorAcumulado: acumulado };
+    });
   };
 
   // ---------------------------------------------------------------
@@ -93,14 +98,12 @@ const EntregablesList = () => {
 
   const handleOpenModal = async (entregable = null) => {
     if (entregable) {
-      // Cargo detalle desde API
       try {
         const res = await getEntregableById(entregable.id);
         const data = res.data;
         setEditingId(entregable.id);
         setFormEntregable({
           codigo: data.codigo ?? "",
-          // mostramos en % (0-100). displayPct maneja si backend usa 0-1 o 0-100
           pctContrato: displayPct(data.pctContrato),
           fechaInicialPlan: data.fechaInicialPlan
             ? data.fechaInicialPlan.substring(0, 10)
@@ -143,15 +146,11 @@ const EntregablesList = () => {
 
       const payload = {
         ...formEntregable,
-        // reemplazamos los campos con versiones parseadas/normalizadas
         pctContrato: pctNorm,
         duracionPlanDias: parseIntOrNull(formEntregable.duracionPlanDias),
         duracionRealDias: parseIntOrNull(formEntregable.duracionRealDias),
         contratoId: parseInt(contratoId, 10),
       };
-
-      // limpia keys vacías o nulas si quieres (opcional)
-      // Object.keys(payload).forEach(k => payload[k] === null && delete payload[k]);
 
       if (editingId) {
         await updateEntregable(editingId, payload);
@@ -163,17 +162,30 @@ const EntregablesList = () => {
       cargarEntregables();
     } catch (err) {
       console.error("❌ Error al guardar entregable", err);
-      alert("Error al guardar entregable. Revisa la consola.");
+      Swal.fire("Error", "❌ Error al guardar entregable", "error");
     }
   };
 
   const handleDelete = async (entregableId) => {
-    if (window.confirm("¿Eliminar este entregable?")) {
+    const result = await Swal.fire({
+      title: "¿Eliminar este entregable?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    });
+
+    if (result.isConfirmed) {
       try {
         await deleteEntregable(entregableId);
         cargarEntregables();
+        Swal.fire("Eliminado", "✅ El entregable fue eliminado", "success");
       } catch (err) {
         console.error("❌ Error al eliminar entregable", err);
+        Swal.fire("Error", "❌ No se pudo eliminar el entregable", "error");
       }
     }
   };
@@ -181,32 +193,81 @@ const EntregablesList = () => {
   const handleVerCurva = async (entregableId) => {
     try {
       const res = await getCurvasByEntregable(entregableId);
-      setCurva(res.data);
+      const processed = res.data.map((c) => ({
+        ...c,
+        detalles: calcularAcumulado(c.detalles),
+      }));
+      setCurva(processed);
 
       const editState = {};
-      res.data.forEach((c) => {
-        editState[c.id] = c.detalles.map((d) => ({
-          fecha: d.fecha,
-          valor: d.valor,
-          valorAcumulado: d.valorAcumulado,
-        }));
+      processed.forEach((c) => {
+        editState[c.id] = c.detalles;
       });
       setEditingData(editState);
+      setShowCurvaModal(true);
     } catch (err) {
       console.error("❌ Error al cargar curva", err);
     }
   };
 
+const handleCurvaChange = (curvaId, index, field, value) => {
+  setEditingData((prev) => {
+    const updated = [...prev[curvaId]];
+    const newValue = Number(value);
+
+    // Validamos que sea número válido
+    if (isNaN(newValue) || newValue < 0 || newValue > 100) {
+      Swal.fire({
+        icon: "error",
+        title: "Validación",
+        text: "❌ El valor debe estar entre 0 y 100.",
+        didOpen: (popup) => {
+          popup.style.zIndex = 20000;
+        },
+      });
+      return prev; // no aplicamos el cambio
+    }
+
+    updated[index] = { ...updated[index], [field]: newValue };
+    const recalculada = calcularAcumulado(updated);
+
+    // Validar acumulado final
+    if (recalculada[recalculada.length - 1].valorAcumulado > 100) {
+      Swal.fire({
+        icon: "error",
+        title: "Validación",
+        text: "❌ El acumulado no puede superar el 100% en el último mes.",
+        didOpen: (popup) => {
+          popup.style.zIndex = 20000;
+        },
+      });
+      return prev; // no aplicamos el cambio
+    }
+
+    return { ...prev, [curvaId]: recalculada };
+  });
+};
+
+
   const handleSaveCurva = async (curvaId) => {
     try {
       await updateCurva(curvaId, editingData[curvaId]);
-      alert("✅ Curva actualizada correctamente");
+      Swal.fire("Éxito", "✅ Curva actualizada correctamente", "success");
       const res = await getCurvasByEntregable(curva[0].origenId);
-      setCurva(res.data);
+      setCurva(
+        res.data.map((c) => ({ ...c, detalles: calcularAcumulado(c.detalles) }))
+      );
+      setShowCurvaModal(false);
     } catch (err) {
       console.error("❌ Error al actualizar curva", err);
-      alert("❌ Error al actualizar curva");
+      Swal.fire("Error", "❌ Error al actualizar curva", "error");
     }
+  };
+
+  const getCurvaLabel = (codigo) => {
+    if (codigo === "CRV_PLAN_VIG") return "Plan";
+    if (codigo === "CRV_REAL_VIG") return "Real";
+    return "Curva";
   };
 
   return (
@@ -272,41 +333,13 @@ const EntregablesList = () => {
         </table>
       </div>
 
-      {curva && (
-        <div className="entregables-curva-card">
-          <h3>📈 Curva del Entregable</h3>
-          <CurvaChart curvas={curva} />
-          <div className="entregables-curvas-wrapper">
-            {curva.map((c) => (
-              <CurvaForm
-                key={c.id}
-                curva={c}
-                editingData={editingData}
-                setEditingData={setEditingData}
-                onSave={handleSaveCurva}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="entregables-footer-btns">
-        <button
-          className="entregables-back-btn"
-          onClick={() => navigate(`/proyectos/${id}/contratos`)}
-        >
-          ⬅️ Volver a Contratos
-        </button>
-      </div>
-
-      {/* 🔹 Modal */}
+      {/* Modal Entregable */}
       {showModal && (
         <div className="entregables-modal-overlay">
           <div className="entregables-modal">
             <h3 className="entregables-modal-title">
               {editingId ? "✏️ Editar Entregable" : "➕ Nuevo Entregable"}
             </h3>
-
             <form onSubmit={handleSave} className="entregables-form-grid">
               <label>
                 Código:
@@ -318,7 +351,6 @@ const EntregablesList = () => {
                   required
                 />
               </label>
-
               <label>
                 % Contrato:
                 <input
@@ -332,7 +364,6 @@ const EntregablesList = () => {
                   required
                 />
               </label>
-
               <label>
                 Fecha Inicial Plan:
                 <input
@@ -343,7 +374,6 @@ const EntregablesList = () => {
                   required
                 />
               </label>
-
               <label>
                 Duración Plan (días):
                 <input
@@ -354,7 +384,6 @@ const EntregablesList = () => {
                   required
                 />
               </label>
-
               <label>
                 Fecha Inicial Real:
                 <input
@@ -364,7 +393,6 @@ const EntregablesList = () => {
                   onChange={handleInputChange}
                 />
               </label>
-
               <label>
                 Duración Real (días):
                 <input
@@ -374,7 +402,6 @@ const EntregablesList = () => {
                   onChange={handleInputChange}
                 />
               </label>
-
               <label>
                 Tipo Entregable:
                 <select
@@ -386,7 +413,6 @@ const EntregablesList = () => {
                   <option value="ECO">Económico</option>
                 </select>
               </label>
-
               <label>
                 Tipo Prorrateo:
                 <select
@@ -398,7 +424,6 @@ const EntregablesList = () => {
                   <option value="PUL">Pulso</option>
                 </select>
               </label>
-
               <label>
                 EDT:
                 <select
@@ -414,7 +439,6 @@ const EntregablesList = () => {
                   <option value="SET">SET</option>
                 </select>
               </label>
-
               <div className="entregables-form-buttons">
                 <button type="submit" className="entregables-save-btn">
                   💾 Guardar
@@ -431,6 +455,91 @@ const EntregablesList = () => {
           </div>
         </div>
       )}
+
+      {/* Modal Curvas */}
+      {showCurvaModal && curva && (
+        <div className="entregables-modal-overlay">
+          <div className="entregables-modal entregables-curva-modal">
+            <h3 className="entregables-modal-title">
+              📈 Curvas del Entregable
+            </h3>
+            <CurvaChart curvas={curva} />
+            <div className="entregables-curva-table">
+              {curva.map((c) => (
+                <div key={c.id} className="curva-section">
+                  <h4>{getCurvaLabel(c.tipoCurvaCodigo)}</h4>
+                  <div className="entregables-curva-table-horizontal">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th></th>
+                          {editingData[c.id].map((d, i) => (
+                            <th key={i}>{d.fecha.substring(0, 10)}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Mensual (%)</td>
+                          {editingData[c.id].map((d, i) => (
+                            <td key={i}>
+                              <input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={d.valor}
+                                onChange={(e) =>
+                                  handleCurvaChange(
+                                    c.id,
+                                    i,
+                                    "valor",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </td>
+                          ))}
+                        </tr>
+                        <tr>
+                          <td>Acumulado (%)</td>
+                          {editingData[c.id].map((d, i) => (
+                            <td key={i}>{d.valorAcumulado.toFixed(2)}%</td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="entregables-form-buttons">
+                    <button
+                      className="entregables-save-btn"
+                      onClick={() => handleSaveCurva(c.id)}
+                    >
+                      💾 Guardar Curva
+                    </button>
+                    <button
+                      className="entregables-cancel-btn"
+                      onClick={() => setShowCurvaModal(false)}
+                    >
+                      ❌ Cerrar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="entregables-footer-btns">
+        <button
+          className="entregables-back-btn"
+          onClick={() => navigate(`/proyectos/${id}/contratos`)}
+        >
+          ⬅️ Volver a Contratos
+        </button>
+      </div>
     </div>
   );
 };

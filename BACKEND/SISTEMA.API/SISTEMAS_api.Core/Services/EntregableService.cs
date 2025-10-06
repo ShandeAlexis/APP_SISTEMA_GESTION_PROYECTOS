@@ -103,6 +103,10 @@ public class EntregableService : IEntregableService
         {
             throw new Exception(Mensajes.Entregable.ErrorObtener);
         }
+
+        CalcularCurvaMensualAsync(nuevoEntregable.ENTRinID, "CRV_PLAN_VIG").Wait();
+        CalcularCurvaMensualAsync(nuevoEntregable.ENTRinID, "CRV_REAL_VIG").Wait();
+
         return new EntregableDTO
         {
             Id = entregableConRelaciones.ENTRinID,
