@@ -209,6 +209,7 @@ public class ContratoService : IContratoService
                             .Where(e => string.Equals(e.TENTchCodigo?.Trim(), tipoEntregable, StringComparison.OrdinalIgnoreCase))
                             .ToList();
 
+
         if (!entregables.Any())
             return new List<CurvaDTO>();
 

@@ -134,7 +134,6 @@ namespace SISTEMA.API.SISTEMAS_API.API.Controllers
             {
                 if (string.IsNullOrWhiteSpace(tipoCurva))
                     return BadRequest(new { mensaje = "Debe especificar el tipo de curva" });
-
                 var curvas = await contratoService.CalculateCurvasForContratoAsync(id, tipoCurva);
 
                 if (curvas == null || !curvas.Any())

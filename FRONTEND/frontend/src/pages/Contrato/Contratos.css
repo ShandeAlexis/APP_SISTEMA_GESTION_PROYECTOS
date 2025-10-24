@@ -169,3 +169,96 @@ tbody tr:hover {
   justify-content: flex-end;
   margin-top: 16px;
 }
+/* ==========================
+   🎨 Estilo exclusivo para el modal de curvas
+   ========================== */
+.curvas-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.curvas-modal-content {
+  width: 90vw;
+  max-width: 1600px;
+  max-height: 90vh;
+  background: #1e1e1e;
+  color: #fff;
+  padding: 24px;
+  border-radius: 14px;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+/* Scroll elegante */
+.curvas-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+.curvas-modal-content::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+.curvas-modal-content::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+.curvas-modal-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #00bfff;
+}
+
+/* 🧭 Contenedor horizontal para tablas */
+.curvas-horizontal {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.curva-table-horizontal {
+  width: 100%;
+  border-collapse: collapse;
+  background: #2a2a2a;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.curva-table-horizontal th,
+.curva-table-horizontal td {
+  padding: 8px 12px;
+  text-align: center;
+  border-bottom: 1px solid #444;
+  white-space: nowrap;
+}
+
+.curva-table-horizontal th {
+  background: #333;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Acciones */
+.curvas-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.curvas-modal-actions button {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #6c757d;
+  color: white;
+  font-size: 14px;
+}
+
+.curvas-modal-actions button:hover {
+  background: #565e64;
+}

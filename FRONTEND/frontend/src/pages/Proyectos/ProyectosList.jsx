@@ -166,13 +166,13 @@ const ProyectosList = () => {
               <td>{p.codigoEstado}</td>
               <td>
                 <button className="btn-editar" onClick={() => abrirModalEditar(p)}>
-                  ✏️ Editar
+                  ✏️ 
                 </button>
                 <button
                   className="btn-eliminar"
                   onClick={() => handleEliminar(p.id)}
                 >
-                  🗑️ Eliminar
+                  🗑️ 
                 </button>
                 <button
                   className="btn-contratos"

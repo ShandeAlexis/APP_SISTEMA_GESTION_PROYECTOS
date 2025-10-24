@@ -5,3 +5,5 @@ export const createContrato = (data) => baseAPI.post("/contrato", data);
 export const getContratoById = (idContrato) => baseAPI.get(`/contrato/${idContrato}`);
 export const updateContrato = (idContrato, data) => baseAPI.put(`/contrato/${idContrato}`, data);
 export const deleteContrato = (idContrato) => baseAPI.delete(`/contrato/${idContrato}`);
+
+export const getCurvaContrato = (idContrato, tipoCurva) => baseAPI.get(`/contrato/${idContrato}/curvas?tipoCurva=${tipoCurva}`);

@@ -1,10 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
+import CurvaChart2 from "../../components/CurvaChart/CurvaChart2";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   getContratosByProyecto,
   createContrato,
   updateContrato,
   deleteContrato,
+  getCurvaContrato,
 } from "../../services/contratosService";
 import "./Contratos.css";
 
@@ -15,6 +17,8 @@ const Contratos = () => {
   const [contratos, setContratos] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editando, setEditando] = useState(null);
+  const [curvaContrato, setCurvaContrato] = useState([]);
+  const [showCurvaContratoModal, setShowCurvaContratoModal] = useState(false);
 
   const [formContrato, setFormContrato] = useState({
     codigo: "",
@@ -30,6 +34,9 @@ const Contratos = () => {
     fechaFinal: "",
   });
 
+  // ==============================
+  // 📦 CARGA DE CONTRATOS
+  // ==============================
   const cargarContratos = useCallback(async () => {
     try {
       const res = await getContratosByProyecto(proyectoId);
@@ -43,6 +50,9 @@ const Contratos = () => {
     cargarContratos();
   }, [cargarContratos]);
 
+  // ==============================
+  // ✏️ MANEJO DE FORMULARIO
+  // ==============================
   const handleInputChange = (e) => {
     setFormContrato({ ...formContrato, [e.target.name]: e.target.value });
   };
@@ -77,6 +87,38 @@ const Contratos = () => {
     }
   };
 
+  // ==============================
+  // 📈 VER CURVAS DEL CONTRATO
+  // ==============================
+  const handleCurva = async (idContrato) => {
+    try {
+      const resultados = await Promise.allSettled([
+        getCurvaContrato(idContrato, "CRV_PLAN_FIS"),
+        getCurvaContrato(idContrato, "CRV_REAL_FIS"),
+        getCurvaContrato(idContrato, "CRV_PLAN_ECO"),
+        getCurvaContrato(idContrato, "CRV_REAL_ECO"),
+      ]);
+
+      const curvas = resultados
+        .filter((r) => r.status === "fulfilled" && r.value.data.length > 0)
+        .flatMap((r) => r.value.data);
+
+      if (curvas.length === 0) {
+        alert("⚠️ No existen curvas calculadas para este contrato.");
+        return;
+      }
+
+      setCurvaContrato(curvas);
+      setShowCurvaContratoModal(true);
+    } catch (err) {
+      console.error("❌ Error cargando curvas del contrato", err);
+      alert("Error cargando curvas del contrato.");
+    }
+  };
+
+  // ==============================
+  // 🔧 FUNCIONES AUXILIARES
+  // ==============================
   const abrirModalEditar = (contrato) => {
     setEditando(contrato);
     setFormContrato({
@@ -117,6 +159,9 @@ const Contratos = () => {
     });
   };
 
+  // ==============================
+  // 🧱 RENDER
+  // ==============================
   return (
     <div className="contratos-page">
       <div className="header">
@@ -177,19 +222,25 @@ const Contratos = () => {
                         )
                       }
                     >
-                      👁️ Ver
+                      👁️
                     </button>
                     <button
                       className="btn-warning"
                       onClick={() => abrirModalEditar(c)}
                     >
-                      ✏️ Editar
+                      ✏️
                     </button>
                     <button
                       className="btn-danger"
                       onClick={() => handleEliminar(c.id)}
                     >
-                      🗑️ Eliminar
+                      🗑️
+                    </button>
+                    <button
+                      className="btn-success"
+                      onClick={() => handleCurva(c.id)}
+                    >
+                      📈
                     </button>
                   </div>
                 </td>
@@ -204,9 +255,12 @@ const Contratos = () => {
         </table>
       </div>
 
+      {/* ==========================
+          MODAL CREAR / EDITAR
+      =========================== */}
       {showModal && (
         <div className="modal">
-          <div className="modal-content">
+          <div className="modal-content modal-large">
             <h2>{editando ? "Editar Contrato" : "Nuevo Contrato"}</h2>
             <form onSubmit={handleGuardar}>
               <div className="form-grid">
@@ -331,6 +385,100 @@ const Contratos = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================
+          MODAL CURVAS CONTRATO
+      =========================== */}
+      {showCurvaContratoModal && curvaContrato && (
+        <div className="curvas-modal-overlay">
+          <div className="curvas-modal-content modal-extra-wide">
+            <h2>📈 Curvas del Contrato</h2>
+            <CurvaChart2 curvas={curvaContrato} />
+            <hr style={{ margin: "20px 0", borderColor: "#333" }} />
+
+            {/* 🧩 TABLA HORIZONTAL */}
+            <div className="curvas-horizontal">
+              {(() => {
+                // ✅ Generar un mapa agrupado por mes/año
+                const fechasMap = new Map();
+
+                curvaContrato.forEach((c) => {
+                  c.detalles.forEach((d) => {
+                    const fechaObj = new Date(d.fecha);
+                    const clave = `${fechaObj.getFullYear()}-${
+                      fechaObj.getMonth() + 1
+                    }`; // ej: "2024-1"
+                    if (!fechasMap.has(clave)) fechasMap.set(clave, fechaObj);
+                  });
+                });
+
+                // ✅ Ordenar las fechas por año/mes
+                const fechas = Array.from(fechasMap.values()).sort(
+                  (a, b) => a - b
+                );
+
+                return (
+                  <table className="curva-table-horizontal">
+                    <thead>
+                      <tr>
+                        <th>Tipo Curva</th>
+                        {fechas.map((f, i) => (
+                          <th key={i}>
+                            {f.toLocaleDateString("es-ES", {
+                              month: "short",
+                              year: "2-digit",
+                            })}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {curvaContrato.map((curva, i) => (
+                        <tr key={i}>
+                          <td>
+                            {{
+                              CRV_PLAN_FIS: "Plan Físico",
+                              CRV_REAL_FIS: "Real Físico",
+                              CRV_PLAN_ECO: "Plan Económico",
+                              CRV_REAL_ECO: "Real Económico",
+                            }[curva.tipoCurvaCodigo] || curva.tipoCurvaCodigo}
+                          </td>
+                          {fechas.map((f, j) => {
+                            // Buscar el punto del mismo mes/año
+                            const punto = curva.detalles.find((d) => {
+                              const df = new Date(d.fecha);
+                              return (
+                                df.getMonth() === f.getMonth() &&
+                                df.getFullYear() === f.getFullYear()
+                              );
+                            });
+                            return (
+                              <td key={j}>
+                                {punto
+                                  ? punto.valorAcumulado.toFixed(2) + "%"
+                                  : "-"}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                );
+              })()}
+            </div>
+
+            <div className="modal-actions">
+              <button
+                className="btn-secondary"
+                onClick={() => setShowCurvaContratoModal(false)}
+              >
+                ❌ Cerrar
+              </button>
+            </div>
           </div>
         </div>
       )}
